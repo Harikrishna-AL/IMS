@@ -10,7 +10,6 @@ class Building(models.Model):
     zip = models.CharField(max_length=200)
     country = models.CharField(max_length=200)
     description = models.TextField()
-    image = models.ImageField(upload_to='images/')
     def __str__(self):
         return self.name
     
