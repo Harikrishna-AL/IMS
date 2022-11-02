@@ -7,4 +7,4 @@ class items(models.Model):
     item_value = models.IntegerField()
     room = models.ForeignKey(rooms, on_delete=models.CASCADE, null=True)
     def __str__(self):
-        return self.name
+        return self.item_name

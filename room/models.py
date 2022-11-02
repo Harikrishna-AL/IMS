@@ -8,4 +8,4 @@ class rooms(models.Model):
     id = models.AutoField(primary_key=True)
     floor = models.ForeignKey(Floor, on_delete=models.CASCADE, null=True)
     def __str__(self):
-        return self.name  
+        return self.room_type
