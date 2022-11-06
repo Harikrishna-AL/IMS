@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 # Register your models here.
-from .models import Building, Block, Floor, room, item
+from .models import Building, Block, Floor, Room, Item
 from django.contrib import admin
 # admin.site.register(Building)
 @admin.register(Building)
@@ -19,12 +19,12 @@ class FloorAdmin(admin.ModelAdmin):
     list_display = ('name', 'no_rooms')
     list_filter = ('name', 'no_rooms')
 
-@admin.register(room)
+@admin.register(Room)
 class roomsAdmin(admin.ModelAdmin):
     list_display = ('room_type', 'room_no')
     list_filter = ('room_type', 'room_no')
 
-@admin.register(item)
+@admin.register(Item)
 class itemAdmin(admin.ModelAdmin):
     list_display = ('item_name', 'item_value')
     list_filter = ('item_name', 'item_value')
