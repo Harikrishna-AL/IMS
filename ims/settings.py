@@ -12,9 +12,6 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 import os
 from pathlib import Path
 
-from collections import OrderedDict
-
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -44,25 +41,18 @@ INSTALLED_APPS = [
     # 'flat_responsive',
     # 'flat',
     'colorfield',
-    'admin_reorder',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'ordered_model',
+    'admin_reorder',
 ]
-APP_ORDER = [
-  ("Buildings"),
-    ("Blocks"),
-    ("Floors"),
-    ("Rooms"),
-    ("Items"),
-] 
 X_FRAME_OPTIONS = 'SAMEORIGIN'
 SILENCED_SYSTEM_CHECKS = ["security.W019"]
 MIDDLEWARE = [
-    'admin_reorder.middleware.ModelAdminReorder',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -70,10 +60,26 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'admin_reorder.middleware.ModelAdminReorder',
 ]
 
 ROOT_URLCONF = 'ims.urls'
+ADMIN_REORDER = (
 
+
+    # Reorder app models
+    {'app': 'auth', 'models': ('auth.User', 'auth.Group')},
+    {'app': 'admin_interface', 'models': ('admin_interface.Theme', 'admin_interface.ColorScheme', 'admin_interface.Icon')},
+    {'app': 'buildings', 'models': ('buildings.Building', 'buildings.Block', 'buildings.Floor', 'buildings.room', 'buildings.item')},
+    {'app': 'admin-interface', 'models': ('auth.User', 'auth.Group')},
+
+
+
+
+
+    
+    
+)
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -103,12 +109,7 @@ DATABASES = {
     }
 }
 
-ADMIN_REORDER = (
-    {'app' : 'admin_interface', 'label' : 'Admin Interface'},
-    {'app': 'auth', 'models': ('auth.User', 'auth.Group')},
 
-    {'app': 'buildings', 'label': 'Buildings', 'models': ('buildings.Building', 'buildings.Block', 'buildings.Floor', 'buildings.room', 'buildings.item')},
-)
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
 
@@ -144,10 +145,6 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
-
-MEDIA_URL = '/logo/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'admin-interface/logo/')
-
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL = '/static/'

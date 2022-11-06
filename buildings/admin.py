@@ -26,8 +26,8 @@ class roomsAdmin(admin.ModelAdmin):
 
 @admin.register(item)
 class itemAdmin(admin.ModelAdmin):
-    list_display = ('item_name', 'item_value')
-    list_filter = ('item_name', 'item_value')
+    list_display = ('item_name', 'item_value', 'item_type')
+    list_filter = ('item_name', 'item_value', 'item_type')
 
 class EventAdminSite(admin.AdminSite):
     def get_app_list(self, request):

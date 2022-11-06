@@ -34,7 +34,23 @@ class Floor(models.Model):
         return self.name
 
 class room(models.Model):
-    room_type = models.CharField(max_length=200)
+    GENRE_CHOICES = (
+        ('Office', 'Office'),
+        ('Lab', 'Lab'),
+        ('Ward', (
+            ('Multibed Ward', 'Multibed Ward'),
+            ('Single Bed Ward', 'Single Bed Ward'),
+            ('Twin Sharing Room','Twin Sharing Room'),
+            ('Single Room', 'Single Room'),
+            ('Single Deluxe Room', 'Single Deluxe Room'),
+            ('Super Deluxe Room', 'Super Deluxe Room'),
+            ('Suite', 'Suite'),
+        )),
+        ('Store', 'Store'),
+        ('Other', 'Other'),
+        )
+    
+    room_type = models.CharField(max_length=200, choices=GENRE_CHOICES)
     room_no = models.IntegerField()
     id = models.AutoField(primary_key=True)
     floor = models.ForeignKey(Floor, on_delete=models.CASCADE, null=True)
@@ -42,7 +58,32 @@ class room(models.Model):
         return self.room_type
 
 class item(models.Model):
+    
+    
+    GENRE_CHOICES = (
+    ('Electrical', (
+        ('Fan', 'Fan'),
+        ('TubeLight', 'TubeLight'),
+        ('Bulb', 'Bulb'),
+        ('Other', 'Other')
+
+    )),
+    ('Plumbing', (
+        ('Flush', 'Flush'),
+        ('Tank', 'Tank'),
+        ('Taps', 'Taps'),
+        ('Other', 'Other'),
+        )),
+    ('Furniture', (
+        ('Chair', 'Chair'),
+        ('Table', 'Table'),
+        ('Other', 'Other'),
+        )), 
+    )
+                    
+    item_type = models.CharField(max_length = 100, choices=GENRE_CHOICES, null=True)
     item_name = models.CharField(max_length=200)
+    
     id = models.AutoField(primary_key=True)
     item_value = models.IntegerField()
     room = models.ForeignKey(room, on_delete=models.CASCADE, null=True)
