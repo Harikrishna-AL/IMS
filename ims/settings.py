@@ -12,6 +12,9 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 import os
 from pathlib import Path
 
+from collections import OrderedDict
+
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -31,11 +34,17 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'items.apps.ItemsConfig',
+    # "admin_interface",
+    # 'items.apps.ItemsConfig',
     'buildings.apps.BuildingsConfig',
-    'blocks.apps.BlocksConfig',
-    'floors.apps.FloorsConfig',
-    'room.apps.RoomConfig',
+    # 'blocks.apps.BlocksConfig',
+    # 'floors.apps.FloorsConfig',
+    # 'room.apps.RoomConfig',
+    'admin_interface',
+    # 'flat_responsive',
+    # 'flat',
+    'colorfield',
+    'admin_reorder',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -43,8 +52,17 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 ]
-
+APP_ORDER = [
+  ("Buildings"),
+    ("Blocks"),
+    ("Floors"),
+    ("Rooms"),
+    ("Items"),
+] 
+X_FRAME_OPTIONS = 'SAMEORIGIN'
+SILENCED_SYSTEM_CHECKS = ["security.W019"]
 MIDDLEWARE = [
+    'admin_reorder.middleware.ModelAdminReorder',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -85,7 +103,12 @@ DATABASES = {
     }
 }
 
+ADMIN_REORDER = (
+    {'app' : 'admin_interface', 'label' : 'Admin Interface'},
+    {'app': 'auth', 'models': ('auth.User', 'auth.Group')},
 
+    {'app': 'buildings', 'label': 'Buildings', 'models': ('buildings.Building', 'buildings.Block', 'buildings.Floor', 'buildings.room', 'buildings.item')},
+)
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
 
@@ -122,8 +145,15 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
+MEDIA_URL = '/logo/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'admin-interface/logo/')
+
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL = '/static/'
 
 STASTATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static')
 ]
+
+DEBUG = True
