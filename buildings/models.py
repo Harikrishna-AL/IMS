@@ -1,6 +1,4 @@
 from django.db import models
-# import django_filters
-from django.contrib import admin
 # Create your models here.
 class Building(models.Model):
     id = models.AutoField(primary_key=True)
@@ -13,8 +11,6 @@ class Building(models.Model):
     description = models.TextField()
     def __str__(self):
         return self.name
-
-
 
 class Block(models.Model):
     # uid = models.Field(primary_key=1)
@@ -33,7 +29,7 @@ class Floor(models.Model):
     def __str__(self):
         return self.name
 
-class room(models.Model):
+class Room(models.Model):
     room_type = models.CharField(max_length=200)
     room_no = models.IntegerField()
     id = models.AutoField(primary_key=True)
@@ -41,10 +37,10 @@ class room(models.Model):
     def __str__(self):
         return self.room_type
 
-class item(models.Model):
+class Item(models.Model):
     item_name = models.CharField(max_length=200)
     id = models.AutoField(primary_key=True)
     item_value = models.IntegerField()
-    room = models.ForeignKey(room, on_delete=models.CASCADE, null=True)
+    room = models.ForeignKey(Room, on_delete=models.CASCADE, null=True)
     def __str__(self):
         return self.item_name
