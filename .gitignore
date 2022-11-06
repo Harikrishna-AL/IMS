@@ -1,0 +1,4 @@
+env/
+buildings/migrations/
+buildings/__pycache__/
+ims/__pycache__/
