@@ -1,9 +1,12 @@
 from django.contrib import admin
 
 # Register your models here.
-from .models import Building, Block, Floor, Room, Item
+from .models import Building, Block, Floor, Room, Item,RoomItem
 from django.contrib import admin
 # admin.site.register(Building)
+
+
+
 @admin.register(Building)
 class BuildingAdmin(admin.ModelAdmin):
     list_display = ('name', 'state','country')
@@ -19,10 +22,16 @@ class FloorAdmin(admin.ModelAdmin):
     list_display = ('name', 'no_rooms')
     list_filter = ('name', 'no_rooms')
 
+# @admin.register(RoomItem)
+class RoomItemInline(admin.TabularInline):
+    model=RoomItem
+admin.site.register(RoomItem)
+
 @admin.register(Room)
 class roomsAdmin(admin.ModelAdmin):
     list_display = ('room_type', 'room_no')
     list_filter = ('room_type', 'room_no')
+    inlines=[RoomItemInline]
 
 @admin.register(Item)
 class itemAdmin(admin.ModelAdmin):
