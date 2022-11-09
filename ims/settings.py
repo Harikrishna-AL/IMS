@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'admin_interface',
     # 'flat_responsive',
     # 'flat',
+    'users.apps.UsersConfig',
     'colorfield',
     'admin_reorder',
     'django.contrib.admin',
