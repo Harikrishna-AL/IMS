@@ -91,4 +91,23 @@ class RoomItem(models.Model):
     item=models.ForeignKey(Item,on_delete=models.CASCADE)
     count=models.IntegerField(default=1)
 
-    
+class Ticket(models.Model):
+    id = models.AutoField(primary_key=True)
+    ticket_no = models.IntegerField()
+    # department = models.ForeignKey(Room, on_delete=models.CASCADE, null=True)
+    department = models.CharField(max_length=100)
+    # room = models.ForeignKey(Room, on_delete=models.CASCADE, null=True)
+    room = models.CharField(max_length=100)
+    message = models.TextField()  #about the maintenance
+
+    def _str_(self):
+        return str(self.ticket_no)
+
+
+class Maintenance(models.Model):
+    id = models.AutoField(primary_key=True)
+    # item = models.CharField(max_length=100)
+    maintenance_date = models.DateField()
+    maintenance_description = models.TextField()
+    def _str_(self):
+        return str(self.maintenance_date)
