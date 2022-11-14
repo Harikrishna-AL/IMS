@@ -58,6 +58,7 @@ APP_ORDER = [
     ("Blocks"),
     ("Floors"),
     ("Rooms"),
+    ("Departments"),
     ("Items"),
 ] 
 X_FRAME_OPTIONS = 'SAMEORIGIN'
@@ -108,7 +109,9 @@ ADMIN_REORDER = (
     {'app' : 'admin_interface', 'label' : 'Admin Interface'},
     {'app': 'auth', 'models': ('auth.User', 'auth.Group')},
 
-    {'app': 'buildings', 'label': 'Buildings', 'models': ('buildings.Building', 'buildings.Block', 'buildings.Floor', 'buildings.Room', 'buildings.Item')},
+    {'app': 'buildings', 'label': 'Buildings', 'models': ('buildings.Building', 'buildings.Block', 'buildings.Floor',
+     'buildings.Room', 'buildings.Item', 'buildings.Department',
+     'buildings.Maintenance', 'buildings.Ticket')},
 )
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
