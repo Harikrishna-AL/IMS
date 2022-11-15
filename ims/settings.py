@@ -29,7 +29,7 @@ SECRET_KEY = 'czif=j6p5yagrslg#(1axv35%#-+_x02fff=kzg06r3lc*8i*9'
 DEBUG = True
 
 ALLOWED_HOSTS = []
-
+AUTH_USER_MODEL = 'customuser.CustomUser'
 
 # Application definition
 
@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'admin_interface',
     # 'flat_responsive',
     # 'flat',
+    'customuser.apps.CustomuserConfig',
     'users.apps.UsersConfig',
     'colorfield',
     'admin_reorder',
@@ -108,7 +109,7 @@ DATABASES = {
 ADMIN_REORDER = (
     {'app' : 'admin_interface', 'label' : 'Admin Interface'},
     {'app': 'auth', 'models': ('auth.User', 'auth.Group')},
-
+    {'app': 'customuser', 'label': 'Users', 'models': ('customuser.CustomUser',)},
     {'app': 'buildings', 'label': 'Buildings', 'models': ('buildings.Building', 'buildings.Block', 'buildings.Floor',
      'buildings.Room', 'buildings.Item', 'buildings.Department',
      'buildings.Maintenance', 'buildings.Ticket')},
