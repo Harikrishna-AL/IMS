@@ -1,5 +1,6 @@
 from django.db import models
 import uuid
+from django.core.exceptions import ValidationError
 # Create your models here.
 
 class Building(models.Model):
@@ -103,6 +104,16 @@ class Room(models.Model):
 
     def __str__(self):
         return self.room_type
+
+    def clean(self):
+        room_no_floor=self.floor.no_rooms
+        rooms_count=self.floor.room_set.all().count()
+        if room_no_floor < rooms_count+1:
+            raise ValidationError("Floor Room Limit exceeded!")
+
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        return super().save(*args, **kwargs)
 
 class RoomItem(models.Model):
     room=models.ForeignKey(Room,on_delete=models.CASCADE)
