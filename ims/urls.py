@@ -24,9 +24,12 @@ urlpatterns = [
     # path('building/', ArticleView.as_view(), name='view'),
     path("admin/", admin.site.urls),
     path("building/", include("buildings.urls")),
+    path("", include("users.urls")),
     # path('block/', include('blocks.urls')),
     # path('floor/', include('floors.urls')),
     # path('room/', include('room.urls')),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    urlpatterns += static(settings.MEDIA_URL1, document_root=settings.MEDIA_ROOT1)
+    urlpatterns += static(settings.MEDIA_URL2, document_root=settings.MEDIA_ROOT2)

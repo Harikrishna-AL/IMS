@@ -61,37 +61,6 @@ class Item(models.Model):
         max_length=200, help_text="Enter item value(e.g. 40W)"
     )
 
-    # def get_department(self):
-    #     return Department.objects.values_list('name', flat=True).values()
-    # room = models.ForeignKey(Room, on_delete=models.CASCADE, null=True)
-    # def generate_GenderChoices():
-    #     choice = ()
-    #     for department in Department.objects.values_list('name', flat=True).values():
-    #         item_choice = ()
-    #         for item in department.:
-    #             item_choice += (item, item)
-    #         choice += (department, item_choice)
-    # GENRE_CHOICES = (
-    # ('Electrical', (
-    #     ('Fan', 'Fan'),
-    #     ('TubeLight', 'TubeLight'),
-    #     ('Bulb', 'Bulb'),
-    #     ('Other', 'Other')
-
-    # )),
-    # ('Plumbing', (
-    #     ('Flush', 'Flush'),
-    #     ('Tank', 'Tank'),
-    #     ('Taps', 'Taps'),
-    #     ('Other', 'Other'),
-    #     )),
-    # ('Furniture', (
-    #     ('Chair', 'Chair'),
-    #     ('Table', 'Table'),
-    #     ('Other', 'Other'),
-    #     )),
-    # )
-
     def __str__(self):
         return self.item_name
 
@@ -100,21 +69,6 @@ class Room(models.Model):
     room_no = models.IntegerField()
     id = models.AutoField(primary_key=True)
     floor = models.ForeignKey(Floor, on_delete=models.CASCADE, null=True)
-    # GENRE_CHOICES = (
-    #     ('Office', 'Office'),
-    #     ('Lab', 'Lab'),
-    #     ('Ward', (
-    #         ('Multibed Ward', 'Multibed Ward'),
-    #         ('Single Bed Ward', 'Single Bed Ward'),
-    #         ('Twin Sharing Room','Twin Sharing Room'),
-    #         ('Single Room', 'Single Room'),
-    #         ('Single Deluxe Room', 'Single Deluxe Room'),
-    #         ('Super Deluxe Room', 'Super Deluxe Room'),
-    #         ('Suite', 'Suite'),
-    #     )),
-    #     ('Store', 'Store'),
-    #     ('Other', 'Other'),
-    #     )
     room_type = models.CharField(max_length=100)
     items = models.ManyToManyField(
         Item, related_name="room_items", blank=True, through="RoomItem"
@@ -161,16 +115,39 @@ class Maintenance(models.Model):
         max_length=200, choices=MAINTENANCE_TYPE, default="Daily"
     )
 
-    def _str_(self):
-        return str(self.maintenance_date)
+    def __str__(self):
+        return self.maintenance_name
 
 
 class Ticket(models.Model):
     ticket_no = models.UUIDField(default=uuid.uuid4, editable=False)
-    department = models.ForeignKey(Department, on_delete=models.CASCADE, null=True)
+    department = models.ManyToManyField(
+        Department, related_name="ticket_department", blank=True
+    )
     room = models.CharField(max_length=100)
     message = models.TextField()  # about the maintenance
     maintenance = models.ForeignKey(Maintenance, on_delete=models.CASCADE, null=True)
+    maintenance_tickets = models.ManyToManyField(
+        Maintenance,
+        related_name="maintenance_tickets",
+        blank=True,
+        through="MaintenanceTicket",
+    )
+    STATUS_CHOICES = (
+        ("Pending", "Pending"),
+        ("Completed", "Completed"),
+    )
+    status = models.CharField(max_length=200, choices=STATUS_CHOICES, default="Pending")
 
-    def _str_(self):
+    def __str__(self):
         return str(self.ticket_no)
+
+
+class MaintenanceTicket(models.Model):
+    ticket = models.ForeignKey(Ticket, on_delete=models.CASCADE)
+    maintenance = models.ForeignKey(Maintenance, on_delete=models.CASCADE)
+
+    count = models.IntegerField(default=1)
+
+    def __str__(self):
+        return f"{self.maintenance.maintenance_name} X {self.count}"
