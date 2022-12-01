@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "easy_select2",
 ]
 APP_ORDER = [
     ("Buildings"),
@@ -163,7 +164,11 @@ USE_TZ = True
 
 MEDIA_URL = "/logo/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "admin-interface/logo/")
+MEDIA_URL1 = "/agent/"
+MEDIA_ROOT1 = os.path.join(BASE_DIR, "templates/agent/")
 
+MEDIA_URL2 = "/customer/"
+MEDIA_ROOT2 = os.path.join(BASE_DIR, "templates/customer/")
 
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 STATIC_URL = "/static/"
