@@ -112,7 +112,7 @@ ADMIN_REORDER = (
     {'app': 'customuser', 'label': 'Users', 'models': ('customuser.CustomUser',)},
     {'app': 'buildings', 'label': 'Buildings', 'models': ('buildings.Building', 'buildings.Block', 'buildings.Floor',
      'buildings.Room', 'buildings.Item', 'buildings.Department',
-     'buildings.Maintenance', 'buildings.Ticket')},
+     'buildings.Maintenance', 'buildings.Ticket','buildings.Activity')},
 )
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators

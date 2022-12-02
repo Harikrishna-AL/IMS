@@ -2,7 +2,7 @@ from django.contrib import admin
 
 # Register your models here.
 from .models import ( Building, Block, Floor, Room, Item,RoomItem, 
-Department, Maintenance, Ticket )
+Department, Maintenance, Ticket ,Activity,ActivityItem)
 from django.contrib import admin
 
 
@@ -62,6 +62,12 @@ class MaintenanceAdmin(admin.ModelAdmin):
     list_filter = ('maintenance_name', 'maintenance_date', 'maintenance_description')
     search_fields = ('maintenance_name', 'maintenance_date')
     inlines = [MaintenanceTicketInline]
+
+class ActivityAdmin(admin.ModelAdmin):
+    list_display = ('id','comments','time')
+
+
+admin.site.register(Activity)
 
 @admin.register(Ticket)
 class TicketAdmin(admin.ModelAdmin):
