@@ -114,17 +114,6 @@ class Room(models.Model):
         self.full_clean()
         return super().save(*args, **kwargs)
 
-# class RoomItem(models.Model):
-#     room=models.ForeignKey(Room,on_delete=models.CASCADE)
-#     item=models.ForeignKey(Item,on_delete=models.CASCADE)
-#     activity=models.ForeignKey(Activity,on_delete=models.CASCADE)
-#     count=models.IntegerField(default=1)
-
-#     def __str__(self):
-        
-#         return f"{self.item.item_name} X {self.count}"
-
-
 class Maintenance(models.Model):
     MAINTENANCE_TYPE = (
         ('Daily', 'Daily'),

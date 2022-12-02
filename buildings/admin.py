@@ -63,11 +63,9 @@ class MaintenanceAdmin(admin.ModelAdmin):
     search_fields = ('maintenance_name', 'maintenance_date')
     inlines = [MaintenanceTicketInline]
 
+@admin.register(Activity)
 class ActivityAdmin(admin.ModelAdmin):
     list_display = ('id','comments','time')
-
-
-admin.site.register(Activity)
 
 @admin.register(Ticket)
 class TicketAdmin(admin.ModelAdmin):
