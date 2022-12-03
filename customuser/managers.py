@@ -1,13 +1,14 @@
 from django.contrib.auth.base_user import BaseUserManager
 
+
 class CustomUserManager(BaseUserManager):
     def create_user(self, email, first_name, last_name, password=None):
         if not email:
-            raise ValueError('Users must have an email address')
+            raise ValueError("Users must have an email address")
         if not first_name:
-            raise ValueError('Users must have a first name')
+            raise ValueError("Users must have a first name")
         if not last_name:
-            raise ValueError('Users must have a last name')
+            raise ValueError("Users must have a last name")
 
         user = self.model(
             email=self.normalize_email(email),
@@ -34,9 +35,8 @@ class CustomUserManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
-
     def get_full_name(self):
-        return self.first_name + ' ' + self.last_name
+        return self.first_name + " " + self.last_name
 
     def get_short_name(self):
         return self.first_name

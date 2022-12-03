@@ -43,5 +43,11 @@ Install the project dependencies from `requirements.txt`
     $ git rebase upstream/master
 ```
 
+## Formatting
+
+- Use `black` for formatting the code.
+- `black` is already installed in the project dependencies.
+- To format the code, run `black .` in the project root directory.
+
 
 

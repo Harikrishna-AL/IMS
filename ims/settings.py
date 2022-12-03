@@ -23,112 +23,123 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'czif=j6p5yagrslg#(1axv35%#-+_x02fff=kzg06r3lc*8i*9'
+SECRET_KEY = "czif=j6p5yagrslg#(1axv35%#-+_x02fff=kzg06r3lc*8i*9"
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
 ALLOWED_HOSTS = []
-AUTH_USER_MODEL = 'customuser.CustomUser'
+AUTH_USER_MODEL = "customuser.CustomUser"
 
 # Application definition
 
 INSTALLED_APPS = [
     # "admin_interface",
     # 'items.apps.ItemsConfig',
-    'buildings.apps.BuildingsConfig',
+    "buildings.apps.BuildingsConfig",
     # 'blocks.apps.BlocksConfig',
     # 'floors.apps.FloorsConfig',
     # 'room.apps.RoomConfig',
-    'admin_interface',
+    "admin_interface",
     # 'flat_responsive',
     # 'flat',
-    'customuser.apps.CustomuserConfig',
-    'users.apps.UsersConfig',
-    'colorfield',
-    'admin_reorder',
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
+    "customuser.apps.CustomuserConfig",
+    "users.apps.UsersConfig",
+    "colorfield",
+    "admin_reorder",
+    "django.contrib.admin",
+    "django.contrib.auth",
+    "django.contrib.contenttypes",
+    "django.contrib.sessions",
+    "django.contrib.messages",
+    "django.contrib.staticfiles",
 ]
 APP_ORDER = [
-  ("Buildings"),
+    ("Buildings"),
     ("Blocks"),
     ("Floors"),
     ("Rooms"),
     ("Departments"),
     ("Items"),
-] 
-X_FRAME_OPTIONS = 'SAMEORIGIN'
+]
+X_FRAME_OPTIONS = "SAMEORIGIN"
 SILENCED_SYSTEM_CHECKS = ["security.W019"]
 MIDDLEWARE = [
-    'admin_reorder.middleware.ModelAdminReorder',
-    'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "admin_reorder.middleware.ModelAdminReorder",
+    "django.middleware.security.SecurityMiddleware",
+    "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.middleware.common.CommonMiddleware",
+    "django.middleware.csrf.CsrfViewMiddleware",
+    "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "django.contrib.messages.middleware.MessageMiddleware",
+    "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-ROOT_URLCONF = 'ims.urls'
+ROOT_URLCONF = "ims.urls"
 
 TEMPLATES = [
     {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
+        "BACKEND": "django.template.backends.django.DjangoTemplates",
+        "DIRS": [os.path.join(BASE_DIR, "templates")],
+        "APP_DIRS": True,
+        "OPTIONS": {
+            "context_processors": [
+                "django.template.context_processors.debug",
+                "django.template.context_processors.request",
+                "django.contrib.auth.context_processors.auth",
+                "django.contrib.messages.context_processors.messages",
             ],
         },
     },
 ]
 
-WSGI_APPLICATION = 'ims.wsgi.application'
+WSGI_APPLICATION = "ims.wsgi.application"
 
 
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+    "default": {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR / "db.sqlite3",
     }
 }
 
 ADMIN_REORDER = (
-    {'app' : 'admin_interface', 'label' : 'Admin Interface'},
-    {'app': 'auth', 'models': ('auth.User', 'auth.Group')},
-    {'app': 'customuser', 'label': 'Users', 'models': ('customuser.CustomUser',)},
-    {'app': 'buildings', 'label': 'Buildings', 'models': ('buildings.Building', 'buildings.Block', 'buildings.Floor',
-     'buildings.Room', 'buildings.Item', 'buildings.Department',
-     'buildings.Maintenance', 'buildings.Ticket')},
+    {"app": "admin_interface", "label": "Admin Interface"},
+    {"app": "auth", "models": ("auth.User", "auth.Group")},
+    {"app": "customuser", "label": "Users", "models": ("customuser.CustomUser",)},
+    {
+        "app": "buildings",
+        "label": "Buildings",
+        "models": (
+            "buildings.Building",
+            "buildings.Block",
+            "buildings.Floor",
+            "buildings.Room",
+            "buildings.Item",
+            "buildings.Department",
+            "buildings.Maintenance",
+            "buildings.Ticket",
+        ),
+    },
 )
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
 ]
 
@@ -136,9 +147,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = "UTC"
 
 USE_I18N = True
 
@@ -150,15 +161,13 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
-MEDIA_URL = '/logo/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'admin-interface/logo/')
+MEDIA_URL = "/logo/"
+MEDIA_ROOT = os.path.join(BASE_DIR, "admin-interface/logo/")
 
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+STATIC_URL = "/static/"
 
-STASTATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static')
-]
+STASTATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
 
 DEBUG = True

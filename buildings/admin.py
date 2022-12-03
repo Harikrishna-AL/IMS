@@ -1,74 +1,90 @@
 from django.contrib import admin
 
 # Register your models here.
-from .models import ( Building, Block, Floor, Room, Item,RoomItem, 
-Department, Maintenance, Ticket )
+from .models import (
+    Building,
+    Block,
+    Floor,
+    Room,
+    Item,
+    RoomItem,
+    Department,
+    Maintenance,
+    Ticket,
+)
 from django.contrib import admin
-
-
 
 
 @admin.register(Building)
 class BuildingAdmin(admin.ModelAdmin):
-    list_display = ('name', 'state','country')
-    list_filter = ('state', 'country')
-    search_fields = ('name', 'state', 'country')
+    list_display = ("name", "state", "country")
+    list_filter = ("state", "country")
+    search_fields = ("name", "state", "country")
+
 
 @admin.register(Block)
 class BlockAdmin(admin.ModelAdmin):
-    list_display = ('name', 'floors')
-    list_filter = ('name', 'floors')
-    search_fields = ('name', 'floors')
+    list_display = ("name", "floors")
+    list_filter = ("name", "floors")
+    search_fields = ("name", "floors")
+
 
 @admin.register(Floor)
 class FloorAdmin(admin.ModelAdmin):
-    list_display = ('name', 'no_rooms')
-    list_filter = ('name', 'no_rooms')
-    search_fields = ('name', 'no_rooms')
-    raw_id_fields = ('block',)
+    list_display = ("name", "no_rooms")
+    list_filter = ("name", "no_rooms")
+    search_fields = ("name", "no_rooms")
+    raw_id_fields = ("block",)
+
 
 # @admin.register(RoomItem)
 class RoomItemInline(admin.TabularInline):
-    model=RoomItem
-    extra=1
+    model = RoomItem
+    extra = 1
+
 
 @admin.register(Room)
 class roomsAdmin(admin.ModelAdmin):
-    list_display = ('room_no', 'room_type')
-    list_filter = ('room_type', 'room_no')
-    raw_id_fields = ('floor',)
-    search_fields = ('room_no', 'room_type')
-    inlines=[RoomItemInline]
+    list_display = ("room_no", "room_type")
+    list_filter = ("room_type", "room_no")
+    raw_id_fields = ("floor",)
+    search_fields = ("room_no", "room_type")
+    inlines = [RoomItemInline]
+
 
 @admin.register(Department)
 class DepartmentAdmin(admin.ModelAdmin):
-    list_display = ('name',)
-    list_filter = ('name',)
-    search_fields = ('name',)
+    list_display = ("name",)
+    list_filter = ("name",)
+    search_fields = ("name",)
+
 
 @admin.register(Item)
 class itemAdmin(admin.ModelAdmin):
-    list_display = ('item_name', 'item_type')
-    list_filter = ('item_name', 'item_type')
-    search_fields = ('item_name', 'item_type')
+    list_display = ("item_name", "item_type")
+    list_filter = ("item_name", "item_type")
+    search_fields = ("item_name", "item_type")
+
 
 class MaintenanceTicketInline(admin.StackedInline):
-    model=Ticket
-    extra=1
+    model = Ticket
+    extra = 1
+
 
 @admin.register(Maintenance)
 class MaintenanceAdmin(admin.ModelAdmin):
-    list_display = ('maintenance_name', 'maintenance_date','maintenance_description')
-    list_filter = ('maintenance_name', 'maintenance_date', 'maintenance_description')
-    search_fields = ('maintenance_name', 'maintenance_date')
+    list_display = ("maintenance_name", "maintenance_date", "maintenance_description")
+    list_filter = ("maintenance_name", "maintenance_date", "maintenance_description")
+    search_fields = ("maintenance_name", "maintenance_date")
     inlines = [MaintenanceTicketInline]
+
 
 @admin.register(Ticket)
 class TicketAdmin(admin.ModelAdmin):
-    list_display = ('ticket_no', 'room')
-    list_filter = ('ticket_no', 'room')
-    search_fields = ('ticket_no', 'room')
-    
+    list_display = ("ticket_no", "room")
+    list_filter = ("ticket_no", "room")
+    search_fields = ("ticket_no", "room")
+
 
 # class EventAdminSite(admin.AdminSite):
 #     def get_app_list(self, request):
