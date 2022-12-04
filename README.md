@@ -20,6 +20,11 @@ Create a python 3 virtualenv, and activate the environment.
         
 ```
 
+⛔️After installing new packages, update the requirements.txt file⛔️
+```bash
+        $ pip freeze > requirements.txt
+```
+
 Install the project dependencies from `requirements.txt`
 ```
         $ pip install -r requirements.txt
