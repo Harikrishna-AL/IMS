@@ -123,6 +123,7 @@ ADMIN_REORDER = (
             "buildings.Department",
             "buildings.Maintenance",
             "buildings.Ticket",
+            "buildings.Activity",
         ),
     },
 )

@@ -12,6 +12,8 @@ from .models import (
     Department,
     Maintenance,
     Ticket,
+    Activity,
+    ActivityItem,
 )
 from django.contrib import admin
 
@@ -44,6 +46,11 @@ class FloorAdmin(admin.ModelAdmin):
 # @admin.register(RoomItem)
 class RoomItemInline(admin.TabularInline):
     model = RoomItem
+    extra = 1
+
+
+class ActivityItemInline(admin.TabularInline):
+    model = ActivityItem
     extra = 1
 
 
@@ -90,3 +97,11 @@ class TicketAdmin(admin.ModelAdmin):
     list_display = ("ticket_no", "room")
     list_filter = ("ticket_no", "room")
     search_fields = ("ticket_no", "room")
+
+
+@admin.register(Activity)
+class ActivityAdmin(admin.ModelAdmin):
+    list_display = ("id", "comments", "time")
+    list_filter = ("id", "comments", "time")
+    search_fields = ("id", "comments", "time")
+    inlines = [ActivityItemInline]
