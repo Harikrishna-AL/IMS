@@ -36,6 +36,16 @@ class Floor(models.Model):
     no_rooms = models.IntegerField()
     block = models.ForeignKey(Block, on_delete=models.CASCADE, null=True)
 
+    def clean(self):
+        floor_no_block = self.block.floors
+        floor_count = self.block.floor_set.all().count()
+        if floor_no_block < floor_count + 1:
+            raise ValidationError("Block Floor Limit exceeded!")
+
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        return super().save(*args, **kwargs)
+
     def __str__(self):
         return self.name
 
@@ -55,27 +65,41 @@ class Item(models.Model):
     item_type = models.CharField(
         max_length=100,
         null=True,
+        blank=True,
         help_text="Enter the item type (e.g. Fan, Tubelight Table, Chair, etc.)",
     )
     item_value = models.CharField(
-        max_length=200, help_text="Enter item value(e.g. 40W)"
+        max_length=200,
+        help_text="Enter item value(e.g. 40W)",
+        blank=True,
+        null=True,
     )
 
     def __str__(self):
         return self.item_name
 
 
+class RoomType(models.Model):
+    id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=200)
+
+    def __str__(self):
+        return self.name
+
+
 class Room(models.Model):
     room_no = models.IntegerField()
     id = models.AutoField(primary_key=True)
     floor = models.ForeignKey(Floor, on_delete=models.CASCADE, null=True)
-    room_type = models.CharField(max_length=100)
+    room_type = models.ForeignKey(RoomType, on_delete=models.CASCADE, null=True)
     items = models.ManyToManyField(
         Item, related_name="room_items", blank=True, through="RoomItem"
     )
 
     def __str__(self):
-        return self.room_type
+        return str(
+            self.floor.block.name + "-" + self.floor.name + "-" + str(self.room_no)
+        )
 
     def clean(self):
         room_no_floor = self.floor.no_rooms
@@ -127,12 +151,6 @@ class Ticket(models.Model):
     room = models.CharField(max_length=100)
     message = models.TextField()  # about the maintenance
     maintenance = models.ForeignKey(Maintenance, on_delete=models.CASCADE, null=True)
-    maintenance_tickets = models.ManyToManyField(
-        Maintenance,
-        related_name="maintenance_tickets",
-        blank=True,
-        through="MaintenanceTicket",
-    )
     STATUS_CHOICES = (
         ("Pending", "Pending"),
         ("Completed", "Completed"),

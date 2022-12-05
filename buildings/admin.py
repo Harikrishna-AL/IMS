@@ -1,5 +1,6 @@
 from django.contrib import admin
 from easy_select2 import select2_modelform
+from .inline import *
 
 # Register your models here.
 from .models import (
@@ -8,17 +9,13 @@ from .models import (
     Floor,
     Room,
     Item,
-    RoomItem,
     Department,
     Maintenance,
     Ticket,
     Activity,
-    ActivityItem,
+    RoomType,
 )
 from django.contrib import admin
-
-
-ticket_form = select2_modelform(Ticket, attrs={"width": "250px"})
 
 
 @admin.register(Building)
@@ -43,24 +40,21 @@ class FloorAdmin(admin.ModelAdmin):
     raw_id_fields = ("block",)
 
 
-# @admin.register(RoomItem)
-class RoomItemInline(admin.TabularInline):
-    model = RoomItem
-    extra = 1
-
-
-class ActivityItemInline(admin.TabularInline):
-    model = ActivityItem
-    extra = 1
+@admin.register(RoomType)
+class RoomTypeAdmin(admin.ModelAdmin):
+    list_filter = ("name",)
+    search_fields = ("name",)
 
 
 @admin.register(Room)
 class roomsAdmin(admin.ModelAdmin):
-    list_display = ("room_no", "room_type")
-    list_filter = ("room_type", "room_no")
+    list_display = ("room_no",)
+    list_filter = ("room_no", "room_type")
     raw_id_fields = ("floor",)
     search_fields = ("room_no", "room_type")
     inlines = [RoomItemInline]
+    roomtype_select = select2_modelform(Room, attrs={"width": "250px"})
+    form = roomtype_select
 
 
 @admin.register(Department)
@@ -77,26 +71,23 @@ class itemAdmin(admin.ModelAdmin):
     search_fields = ("item_name", "item_type")
 
 
-class MaintenanceTicketInline(admin.StackedInline):
-    form = ticket_form
-    model = Ticket
-    extra = 1
-
-
 @admin.register(Maintenance)
 class MaintenanceAdmin(admin.ModelAdmin):
+    inlines = [MaintenanceTicketInline]
     list_display = ("maintenance_name", "maintenance_date", "maintenance_description")
     list_filter = ("maintenance_name", "maintenance_date", "maintenance_description")
     search_fields = ("maintenance_name", "maintenance_date")
-    inlines = [MaintenanceTicketInline]
+    select2 = select2_modelform(Maintenance, attrs={"width": "250px"})
+    form = select2
 
 
 @admin.register(Ticket)
 class TicketAdmin(admin.ModelAdmin):
-    form = ticket_form
     list_display = ("ticket_no", "room")
     list_filter = ("ticket_no", "room")
     search_fields = ("ticket_no", "room")
+    select2 = select2_modelform(Ticket, attrs={"width": "250px"})
+    form = select2
 
 
 @admin.register(Activity)
