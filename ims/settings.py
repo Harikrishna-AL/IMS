@@ -29,22 +29,14 @@ SECRET_KEY = "czif=j6p5yagrslg#(1axv35%#-+_x02fff=kzg06r3lc*8i*9"
 DEBUG = True
 
 ALLOWED_HOSTS = []
-AUTH_USER_MODEL = "customuser.CustomUser"
+AUTH_USER_MODEL = "members.Members"
 
 # Application definition
 
 INSTALLED_APPS = [
-    # "admin_interface",
-    # 'items.apps.ItemsConfig',
-    "buildings.apps.BuildingsConfig",
-    # 'blocks.apps.BlocksConfig',
-    # 'floors.apps.FloorsConfig',
-    # 'room.apps.RoomConfig',
+    "buildings",
     "admin_interface",
-    # 'flat_responsive',
-    # 'flat',
-    "customuser.apps.CustomuserConfig",
-    "users.apps.UsersConfig",
+    "members",
     "colorfield",
     "admin_reorder",
     "django.contrib.admin",
@@ -110,7 +102,7 @@ DATABASES = {
 ADMIN_REORDER = (
     {"app": "admin_interface", "label": "Admin Interface"},
     {"app": "auth", "models": ("auth.User", "auth.Group")},
-    {"app": "customuser", "label": "Users", "models": ("customuser.CustomUser",)},
+    {"app": "members", "label": "Members", "models": ("members.Members",)},
     {
         "app": "buildings",
         "label": "Buildings",
@@ -124,6 +116,7 @@ ADMIN_REORDER = (
             "buildings.Maintenance",
             "buildings.Ticket",
             "buildings.Activity",
+            "buildings.RoomType",
         ),
     },
 )
@@ -165,10 +158,10 @@ USE_TZ = True
 
 MEDIA_URL = "/logo/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "admin-interface/logo/")
-MEDIA_URL1 = "/agent/"
+MEDIA_URL1 = "members/agent/"
 MEDIA_ROOT1 = os.path.join(BASE_DIR, "templates/agent/")
 
-MEDIA_URL2 = "/customer/"
+MEDIA_URL2 = "members/customer/"
 MEDIA_ROOT2 = os.path.join(BASE_DIR, "templates/customer/")
 
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")

@@ -92,11 +92,8 @@ def viewTickets():
             data.append(ticket_data)
         if (
             maintenance_type == "Yearly"
-            and (
-                tickets[i].status == "Pending" and datetime.date.today() - ticket_date
-            ).days
-            % 365
-            == 0
+            and tickets[i].status == "Pending"
+            and (datetime.date.today() - ticket_date).days % 365 == 0
         ):
             # data.append("yearly ")
             ticket_data["MaintenancePeriod"] = maintenance_type
