@@ -511,6 +511,34 @@ body {
 .status.disabled:before {
   background-color: #59719d;
 }
+.department {
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  padding: 4px 8px;
+  font-size: 12px;
+}
+.department:before {
+  content: "";
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  margin-right: 4px;
+}
+.department.active {
+  color: #2ba972;
+  background-color: rgb(138, 176, 35, 0.2)
+}
+.department.active:before {
+  background-color: #4E660D;
+}
+.status.disabled {
+  color: #59719d;
+  background-color: rgba(89, 113, 157, 0.2);
+}
+.status.disabled:before {
+  background-color: #59719d;
+}
 
 .gridView {
   display: flex;

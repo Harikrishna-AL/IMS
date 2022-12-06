@@ -1,7 +1,8 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from buildings.models import Ticket
 from buildings.models import Maintenance
-
+from django.contrib.auth import authenticate, login, logout
+from django.contrib import messages
 # importing HttpResponse
 from django.shortcuts import render
 from buildings.models import Ticket, Maintenance
@@ -9,6 +10,24 @@ from buildings.models import Ticket, Maintenance
 from django.http import HttpResponse
 import datetime
 
+def login_member(request):
+    if request.method == "POST":
+        username = request.POST.get("username")
+        password = request.POST.get("password")
+        user = authenticate(request, username=username, password=password)
+        ## If user exists, login and redirect to agent page or customer page
+        if user is not None:
+            login(request, user)
+            if user.is_agent:
+                return redirect("agent")
+            else:
+                return redirect("customer")
+        ## If user does not exist, redirect to login page
+        else:
+            messages.info(request, "Username OR password is incorrect")
+            return redirect("login")
+    else:
+        return render(request, "members/authenticate/login.html", {})
 
 def viewTickets():
     tickets = Ticket.objects.all()
@@ -109,8 +128,8 @@ def viewTickets():
 
 def agent(request):
     agent_data = viewTickets()
-    return render(request, "agent/index.html", {"agent_data": agent_data})
+    return render(request, "members/agent/index.html", {"agent_data": agent_data})
 
 
 def customer(request):
-    return render(request, "customer/index.html")
+    return render(request, "members/customer/index.html")
