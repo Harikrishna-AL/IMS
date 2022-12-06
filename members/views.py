@@ -7,14 +7,25 @@ from django.contrib import messages
 # importing HttpResponse
 from django.shortcuts import render
 from buildings.models import Ticket, Maintenance
-
+from .forms import RegisterForm
 from django.http import HttpResponse
 import datetime
 
 
-def logout_member(request):
-    logout(request)
-    return redirect("login")
+def register_member(request):
+    if request.method == "POST":
+        form = RegisterForm(request.POST)
+        if form.is_valid():
+            form.save()
+            email = form.cleaned_data.get("email")
+            raw_password = form.cleaned_data.get("password1")
+            user = authenticate(email=email, password=raw_password)
+            login(request, user)
+            messages.success(request, "Account was created for " + email)
+            return redirect("login")
+    else:
+        form = RegisterForm()
+    return render(request, "members/authenticate/register.html", {"form": form})
 
 
 def login_member(request):
@@ -36,6 +47,11 @@ def login_member(request):
             return redirect("login")
     else:
         return render(request, "members/authenticate/login.html", {})
+
+
+def logout_member(request):
+    logout(request)
+    return redirect("login")
 
 
 def viewTickets():
