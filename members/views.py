@@ -3,12 +3,19 @@ from buildings.models import Ticket
 from buildings.models import Maintenance
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
+
 # importing HttpResponse
 from django.shortcuts import render
 from buildings.models import Ticket, Maintenance
 
 from django.http import HttpResponse
 import datetime
+
+
+def logout_member(request):
+    logout(request)
+    return redirect("login")
+
 
 def login_member(request):
     if request.method == "POST":
@@ -24,10 +31,12 @@ def login_member(request):
                 return redirect("customer")
         ## If user does not exist, redirect to login page
         else:
+            print("Username OR password is incorrect")
             messages.info(request, "Username OR password is incorrect")
             return redirect("login")
     else:
         return render(request, "members/authenticate/login.html", {})
+
 
 def viewTickets():
     tickets = Ticket.objects.all()
