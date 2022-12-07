@@ -28,14 +28,14 @@ class BuildingAdmin(admin.ModelAdmin):
 @admin.register(Block)
 class BlockAdmin(admin.ModelAdmin):
     list_display = ("name", "floors")
-    list_filter = ("name", "floors")
+    list_filter = ("name", "floors", "building")
     search_fields = ("name", "floors")
 
 
 @admin.register(Floor)
 class FloorAdmin(admin.ModelAdmin):
     list_display = ("name", "no_rooms")
-    list_filter = ("name", "no_rooms")
+    list_filter = ("name", "no_rooms", "block", "block__building")
     search_fields = ("name", "no_rooms")
     raw_id_fields = ("block",)
 
@@ -48,8 +48,14 @@ class RoomTypeAdmin(admin.ModelAdmin):
 
 @admin.register(Room)
 class roomsAdmin(admin.ModelAdmin):
-    list_display = ("room_no",)
-    list_filter = ("room_no", "room_type")
+    list_display = ("room_no", "room_type", "floor")
+    list_filter = (
+        "room_no",
+        "room_type",
+        "floor",
+        "floor__block",
+        "floor__block__building",
+    )
     raw_id_fields = ("floor",)
     search_fields = ("room_no", "room_type")
     inlines = [RoomItemInline]
@@ -67,7 +73,7 @@ class DepartmentAdmin(admin.ModelAdmin):
 @admin.register(Item)
 class itemAdmin(admin.ModelAdmin):
     list_display = ("item_name", "item_type")
-    list_filter = ("item_name", "item_type")
+    list_filter = ("item_name", "item_type", "department")
     search_fields = ("item_name", "item_type")
 
 

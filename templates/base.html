@@ -30,7 +30,8 @@ integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG
         </div>
         <ul class="sidebar-list">
           <li class="sidebar-list-item active">
-            <a href="#">
+            {% if user.is_authenticated and user.is_agent %}
+            <a href="{% url 'agent' %}">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="18"
@@ -49,8 +50,30 @@ integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG
               </svg>
               <span>Tickets</span>
             </a>
+            {% else %}
+            <a href="{% url 'customer' %}">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="feather feather-shopping-bag"
+              >
+                <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
+                <line x1="3" y1="6" x2="21" y2="6" />
+                <path d="M16 10a4 4 0 0 1-8 0" />
+              </svg>
+              <span>Tickets</span>
+            </a>
+            {% endif %}
           </li>
           <li class="sidebar-list-item active">
+            {% if user.is_authenticated and not user.is_customer %}
             <a href="#">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -70,6 +93,7 @@ integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG
               </svg>
               <span>Activity</span>
             </a>
+            {% endif %}
           </li>
           <li class="sidebar-list-item active">
             <a href="{% url 'logout' %}">
@@ -89,7 +113,7 @@ integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG
               alt="Account"
             />
           </div>
-          <div class="account-info-name">Harikrishna</div>
+          <div class="account-info-name">{{user.last_name}}</div>
           <button class="account-info-more">
             <svg
               xmlns="http://www.w3.org/2000/svg"

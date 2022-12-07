@@ -37,6 +37,7 @@ def login_member(request):
         if user is not None:
             login(request, user)
             if user.is_agent:
+                print("Agent logged in")
                 return redirect("agent")
             else:
                 return redirect("customer")
@@ -52,6 +53,11 @@ def login_member(request):
 def logout_member(request):
     logout(request)
     return redirect("login")
+
+
+def detail_ticket(request, ticket_id):
+    ticket = Ticket.objects.get(id=ticket_id)
+    return render(request, "members/tickets/details.html", {"ticket_data": ticket})
 
 
 def viewTickets():
@@ -71,7 +77,7 @@ def viewTickets():
             and tickets[i].status == "Pending"
             and (datetime.date.today() - ticket_date).days % 1 == 0
         ):
-            # data.append("daily ")
+            ticket_data["ticket_no"] = tickets[i].id
             ticket_data["MaintenancePeriod"] = maintenance_type
             ticket_data["MaintenanceDate"] = ticket_date
             ticket_data["Department"] = [
@@ -86,6 +92,7 @@ def viewTickets():
             and (datetime.date.today() - ticket_date).days % 7 == 0
         ):
             # data.append("weekly ")
+            ticket_data["ticket_no"] = tickets[i].id
             ticket_data["MaintenancePeriod"] = maintenance_type
             ticket_data["MaintenanceDate"] = ticket_date
             ticket_data["Department"] = [
@@ -100,6 +107,7 @@ def viewTickets():
             and (datetime.date.today() - ticket_date).days % 30 == 0
         ):
             # data.append("monthly ")
+            ticket_data["ticket_no"] = tickets[i].id
             ticket_data["MaintenancePeriod"] = maintenance_type
             ticket_data["MaintenanceDate"] = ticket_date
             ticket_data["Department"] = [
@@ -113,6 +121,7 @@ def viewTickets():
             and (datetime.date.today() - ticket_date).days % 90 == 0
         ):
             # data.append("quarterly ")
+            ticket_data["ticket_no"] = tickets[i].id
             ticket_data["MaintenancePeriod"] = maintenance_type
             ticket_data["MaintenanceDate"] = ticket_date
             ticket_data["Department"] = [
@@ -127,6 +136,7 @@ def viewTickets():
             and (datetime.date.today() - ticket_date).days % 180 == 0
         ):
             # data.append("half yearly ")
+            ticket_data["ticket_no"] = tickets[i].id
             ticket_data["MaintenancePeriod"] = maintenance_type
             ticket_data["MaintenanceDate"] = ticket_date
             ticket_data["Department"] = [
@@ -140,6 +150,7 @@ def viewTickets():
             and (datetime.date.today() - ticket_date).days % 365 == 0
         ):
             # data.append("yearly ")
+            ticket_data["ticket_no"] = tickets[i].id
             ticket_data["MaintenancePeriod"] = maintenance_type
             ticket_data["MaintenanceDate"] = ticket_date
             ticket_data["Department"] = [
