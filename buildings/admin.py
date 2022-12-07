@@ -98,7 +98,7 @@ class TicketAdmin(admin.ModelAdmin):
 
 @admin.register(Activity)
 class ActivityAdmin(admin.ModelAdmin):
-    list_display = ("id", "comments", "time")
-    list_filter = ("id", "comments", "time")
-    search_fields = ("id", "comments", "time")
+    list_display = ("id", "comments", "closed_at")
+    list_filter = ("id", "comments", "closed_at")
+    search_fields = ("id", "comments", "closed_at")
     inlines = [ActivityItemInline]

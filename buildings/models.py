@@ -27,7 +27,7 @@ class Block(models.Model):
     building = models.ForeignKey(Building, on_delete=models.CASCADE, null=True)
 
     def __str__(self):
-        return self.name
+        return f"{ self.building.name } <> { self.name }"
 
 
 class Floor(models.Model):
@@ -47,7 +47,7 @@ class Floor(models.Model):
         return super().save(*args, **kwargs)
 
     def __str__(self):
-        return self.name
+        return f"{self.block.building.name}<>{self.block.name}<>{ self.name }"
 
 
 class Department(models.Model):
@@ -74,6 +74,7 @@ class Item(models.Model):
         blank=True,
         null=True,
     )
+    price = models.IntegerField(default=0)
 
     def __str__(self):
         return self.item_name
@@ -97,9 +98,7 @@ class Room(models.Model):
     )
 
     def __str__(self):
-        return str(
-            self.floor.block.name + "-" + self.floor.name + "-" + str(self.room_no)
-        )
+        return f"{self.floor.block.building.name} {self.floor.block.name} <> {self.floor.name} <> {self.room_no}"
 
     def clean(self):
         room_no_floor = self.floor.no_rooms
@@ -148,13 +147,14 @@ class Ticket(models.Model):
     department = models.ManyToManyField(
         Department, related_name="ticket_department", blank=True
     )
-    room = models.CharField(max_length=100)
+    room = models.ForeignKey(Room, on_delete=models.CASCADE, null=True)
     message = models.TextField()  # about the maintenance
     maintenance = models.ForeignKey(Maintenance, on_delete=models.CASCADE, null=True)
     STATUS_CHOICES = (
         ("Pending", "Pending"),
         ("Completed", "Completed"),
     )
+    created_at = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=200, choices=STATUS_CHOICES, default="Pending")
 
     def __str__(self):
@@ -178,7 +178,7 @@ class Activity(models.Model):
         Item, related_name="activity_items", blank=True, through="ActivityItem"
     )
     comments = models.TextField()
-    time = models.TimeField(auto_now=True)
+    closed_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         verbose_name_plural = "Activities"
