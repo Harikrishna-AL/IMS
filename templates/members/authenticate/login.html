@@ -56,7 +56,7 @@
 
       <h3 class="text-white" >Login</h3>
       <hr />
-      <form  action="" method="POST">
+      <form  action="{% url 'login' %}" method="POST">
         {% csrf_token %}
         <div class="form-group">
           <label class="text-white" for="exampleInputEmail1">Email address</label>
