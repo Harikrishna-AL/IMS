@@ -107,21 +107,61 @@
   <div class="products-area-wrapper tableView">
     <div class="products-header">
       <div class="container my-3">
-     <h4 class="text-white">Ticket-ID: {{ticket_data.ticket_no}}</h4>
-  
-      {% for dep in ticket_data.department.all %}
-      <div class="product-cell status-cell">
-        <span class="status active">{{ dep}}</span>
-      </div>
-      {% endfor %}
-      <br/>
-      <ul class="list-group list-group-flush" style="background-color: #1d283c;">
-      <li  class="list-group-item text-white" style="background-color: #1d283c;" >Room: {{ticket_data.room}}</li>
-      <li  class="list-group-item text-white" style="background-color: #1d283c;" >Message: {{ticket_data.message}}</li>
-      <li  class="list-group-item text-white" style="background-color: #1d283c;" >Status: {{ticket_data.status}}</li>
-      </ul>
+        <h4 class="text-white">Ticket-ID: {{ticket_data.ticket_no}}</h4>
 
-
+        {% for dep in ticket_data.department.all %}
+        <div class="product-cell status-cell">
+          <span class="status active">{{ dep}}</span>
+        </div>
+        {% endfor %}
+        <br />
+        <ul
+          class="list-group list-group-flush"
+          style="background-color: #1d283c"
+        >
+          <li
+            class="list-group-item text-white"
+            style="background-color: #1d283c"
+          >
+            Room: {{ticket_data.room.room_no}}
+          </li>
+          <li
+            class="list-group-item text-white"
+            style="background-color: #1d283c"
+          >
+            Room Type: {{ticket_data.room.room_type}}
+          </li>
+          <li
+            class="list-group-item text-white"
+            style="background-color: #1d283c"
+          >
+            Floor: {{ticket_data.room.floor.name}}
+          </li>
+          <li
+            class="list-group-item text-white"
+            style="background-color: #1d283c"
+          >
+            Block: {{ticket_data.room.floor.block.name}}
+          </li>
+          <li
+            class="list-group-item text-white"
+            style="background-color: #1d283c"
+          >
+            Building: {{ticket_data.room.floor.block.building.name}}
+          </li>
+          <li
+            class="list-group-item text-white"
+            style="background-color: #1d283c"
+          >
+            Message: {{ticket_data.message}}
+          </li>
+          <li
+            class="list-group-item text-white"
+            style="background-color: #1d283c"
+          >
+            Status: {{ticket_data.status}}
+          </li>
+        </ul>
       </div>
     </div>
   </div>

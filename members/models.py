@@ -15,8 +15,8 @@ class Members(AbstractBaseUser, PermissionsMixin):
     is_agent = models.BooleanField(default=False)
     is_customer = models.BooleanField(default=True)
     admin = models.BooleanField(default=False)
-    department = models.ForeignKey(
-        Department, on_delete=models.CASCADE, null=True, blank=True
+    department = models.ManyToManyField(
+        Department, related_name="departments_assigned", blank=True, null=True
     )
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ["first_name", "last_name"]

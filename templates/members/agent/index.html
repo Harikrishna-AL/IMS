@@ -125,7 +125,7 @@
          </div>
 
          <div class="product-cell price">
-           Room<button class="sort-button">
+           Room Type<button class="sort-button">
              <svg
                xmlns="http://www.w3.org/2000/svg"
                width="16"
@@ -164,10 +164,8 @@
              <span class="status active">{{ ticket.MaintenanceDate}}</span>
            </div>
            <div class="product-cell category">
-             <span class="cell-label">Room:</span>
-              <span class="category active" style="padding-right: 70px">{{ ticket.Room }}</span>
-              {% comment %} <button class="action-button" data-bs-toggle="modal" data-bs-target="#moredetailModal{{ticket.ticket_no}}" 
-             style="margin-right: 5px">More Detail</button>  {% endcomment %}
+             <span class="cell-label">Room Type:</span>
+              <span class="category active" style="padding-right: 70px">{{ ticket.RoomType }}</span>
              <a class="btn btn-primary btn-sm" href="{% url 'detail_ticket' ticket_id=ticket.ticket_no %}" role="button">More details</a>
            </div>
 
