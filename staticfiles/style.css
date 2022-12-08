@@ -411,6 +411,7 @@ body {
   display: flex;
   align-items: center;
   border-radius: 4px;
+  overflow: scroll;
 }
 .tableView .products-row:hover {
   box-shadow: var(--filter-shadow);

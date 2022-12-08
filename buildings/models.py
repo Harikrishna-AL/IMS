@@ -98,7 +98,7 @@ class Room(models.Model):
     )
 
     def __str__(self):
-        return f"{self.floor.block.building.name} {self.floor.block.name} <> {self.floor.name} <> {self.room_no}"
+        return f"{self.floor.block.building.name}<> {self.floor.block.name} <> {self.floor.name} <> {self.room_no}"
 
     def clean(self):
         room_no_floor = self.floor.no_rooms
