@@ -1,13 +1,13 @@
 from django.shortcuts import render, redirect
 from buildings.models import Ticket, Maintenance
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .utils import viewTickets
 
 # importing HttpResponse
 from django.shortcuts import render
-from .forms import RegisterForm
+from .forms import RegisterForm, ChangePasswordForm
 
 
 def register_member(request):
@@ -46,6 +46,22 @@ def login_member(request):
             return redirect("login")
     else:
         return render(request, "members/authenticate/login.html", {})
+
+
+def change_password(request):
+    if request.method == "POST":
+        form = ChangePasswordForm(data=request.POST, user=request.user)
+        if form.is_valid():
+            form.save()
+            update_session_auth_hash(request, form.user)
+            messages.success(request, "Password Changed Successfully")
+            return redirect("login")
+        else:
+            messages.error(request, "Password Change Failed")
+    else:
+        form = ChangePasswordForm(user=request.user)
+        args = {"form": form}
+        return render(request, "members/authenticate/change_password.html", args)
 
 
 def logout_member(request):
