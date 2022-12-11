@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "easy_select2",
+    "django_crontab",
 ]
 APP_ORDER = [
     ("Buildings"),
@@ -144,7 +145,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = "UTC"
+TIME_ZONE = "Asia/Kolkata"
 
 USE_I18N = True
 
@@ -170,3 +171,8 @@ STATIC_URL = "/static/"
 STASTATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
 
 DEBUG = True
+
+CRONJOBS = [
+    ## Every day at 4:00 a.m maintenance check
+    ("* 4 * * *", "django.core.management.call_command", ["check_maintenance"]),
+]
