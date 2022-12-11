@@ -37,6 +37,33 @@ Install the project dependencies from `requirements.txt`
 * `python manage.py createsuperuser` - create admin user
 * `python manage.py runserver`  - run the project locally
 
+## Docker Setup
+
+* `docker-compose up -d --build` - build and run the project locally
+* `docker-compose exec web python3 manage.py makemigrations` to commit the database version
+* `docker-compose exec web python3 manage.py migrate --run-syncdb` - set up database
+* `docker-compose exec web python3 manage.py createsuperuser` - create admin user
+* `docker-compose exec web python3 manage.py runserver`  - run the project locally
+
+To add the django crontab, run the following command
+```
+    $ docker-compose exec web python3 manage.py crontab add
+```
+To remove the django crontab, run the following command
+```
+    $ docker-compose exec web python3 manage.py crontab remove
+```
+To view the django crontab, run the following command
+```
+    $ docker-compose exec web python3 manage.py crontab show
+```
+
+For removing the docker containers, run the following command
+```
+    $ docker-compose down
+```
+
+
 ## Development
 
 - For creating new features, create new branch locally and work on it.
