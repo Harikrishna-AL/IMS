@@ -137,6 +137,10 @@ class Maintenance(models.Model):
     maintenance_type = models.CharField(
         max_length=200, choices=MAINTENANCE_TYPE, default="Daily"
     )
+    departments = models.ManyToManyField(
+        Department, related_name="maintenance_department"
+    )
+    rooms = models.ManyToManyField(Room, related_name="maintenance_rooms")
 
     def __str__(self):
         return self.maintenance_name
@@ -159,16 +163,6 @@ class Ticket(models.Model):
 
     def __str__(self):
         return str(self.ticket_no)
-
-
-class MaintenanceTicket(models.Model):
-    ticket = models.ForeignKey(Ticket, on_delete=models.CASCADE)
-    maintenance = models.ForeignKey(Maintenance, on_delete=models.CASCADE)
-
-    count = models.IntegerField(default=1)
-
-    def __str__(self):
-        return f"{self.maintenance.maintenance_name} X {self.count}"
 
 
 class Activity(models.Model):

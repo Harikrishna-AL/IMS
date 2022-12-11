@@ -79,7 +79,6 @@ class itemAdmin(admin.ModelAdmin):
 
 @admin.register(Maintenance)
 class MaintenanceAdmin(admin.ModelAdmin):
-    inlines = [MaintenanceTicketInline]
     list_display = ("maintenance_name", "maintenance_date", "maintenance_description")
     list_filter = ("maintenance_name", "maintenance_date", "maintenance_description")
     search_fields = ("maintenance_name", "maintenance_date")
@@ -90,7 +89,7 @@ class MaintenanceAdmin(admin.ModelAdmin):
 @admin.register(Ticket)
 class TicketAdmin(admin.ModelAdmin):
     list_display = ("ticket_no", "room")
-    list_filter = ("ticket_no", "room")
+    list_filter = ("ticket_no", "room", "created_at")
     search_fields = ("ticket_no", "room")
     select2 = select2_modelform(Ticket, attrs={"width": "250px"})
     form = select2

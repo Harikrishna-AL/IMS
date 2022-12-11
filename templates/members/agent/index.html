@@ -146,27 +146,27 @@
          <div class="products-row">
            <div class="product-cell name">
              <span class="cell-label">Ticket-ID:</span>
-             {{ticket.ticket_no}}
+             {{ticket.id}}
            </div>
            <div class="product-cell name">
              <span class="cell-label">Ticket-Type:</span>
-             {{ ticket.MaintenancePeriod }}
+             {{ ticket.maintenance.maintenance_type }}
            </div>
 
            <div class="product-cell category">
              <span class="cell-label">Departemnt</span>
-             {% for dep in ticket.Department %}
+             {% for dep in ticket.department.all %}
              <span class="department active">{{ dep }}</span>
              {% endfor %} 
            </div>
            <div class="product-cell status-cell">
              <span class="cell-label">Published</span>
-             <span class="status active">{{ ticket.MaintenanceDate}}</span>
+             <span class="status active">{{ ticket.maintenance.maintenance_date}}</span>
            </div>
            <div class="product-cell category">
              <span class="cell-label">Room Type:</span>
-              <span class="category active" style="padding-right: 70px">{{ ticket.RoomType }}</span>
-             <a class="btn btn-primary btn-sm" href="{% url 'detail_ticket' ticket_id=ticket.ticket_no %}" role="button">More details</a>
+              <span class="category active" style="padding-right: 70px">{{ ticket.room.room_type }}</span>
+             <a class="btn btn-primary btn-sm" href="{% url 'detail_ticket' ticket_id=ticket.id %}" role="button">More details</a>
            </div>
 
      </div>
