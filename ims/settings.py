@@ -47,6 +47,8 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "easy_select2",
     "django_crontab",
+    "django_filters",
+    "crispy_forms",
 ]
 APP_ORDER = [
     ("Buildings"),
