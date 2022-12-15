@@ -74,7 +74,7 @@ integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG
           </li>
           <li class="sidebar-list-item active">
             {% if user.is_authenticated and not user.is_customer %}
-            <a href="#">
+            <a href="{% url 'activity' %}">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="18"

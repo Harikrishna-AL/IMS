@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from buildings.models import Ticket, Maintenance
+from buildings.models import Ticket, Maintenance,Activity, ActivityItem
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -93,3 +93,14 @@ def agent(request):
 @login_required(login_url="login")
 def customer(request):
     return render(request, "members/customer/index.html")
+
+@login_required(login_url="login")
+def activity(request):
+    activity = Activity.objects.all()
+    return render(request, "members/activity/index.html", {"activity_data": activity})
+
+@login_required(login_url="login")
+def detail_activity(request,activity_id):
+    activity = Activity.objects.get(id=activity_id)
+    item=ActivityItem.objects.all()
+    return render(request, "members/activity/details.html", {"activity_data": activity,"item_data":item})
