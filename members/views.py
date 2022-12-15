@@ -3,7 +3,9 @@ from buildings.models import Ticket, Maintenance
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from .utils import viewTickets
+
+# from .utils import viewTickets
+from .forms import TicketFilter
 
 # importing HttpResponse
 from django.shortcuts import render
@@ -77,8 +79,15 @@ def detail_ticket(request, ticket_id):
 
 @login_required(login_url="login")
 def agent(request):
-    agent_data = viewTickets()
-    return render(request, "members/agent/index.html", {"agent_data": agent_data})
+    # agent_data = viewTickets()
+    tickets = Ticket.objects.all().filter(status="Pending")
+    ticketFilter = TicketFilter(request.GET, queryset=tickets)
+    tickets = ticketFilter.qs
+    return render(
+        request,
+        "members/agent/index.html",
+        {"agent_data": tickets, "ticketFilter": ticketFilter},
+    )
 
 
 @login_required(login_url="login")

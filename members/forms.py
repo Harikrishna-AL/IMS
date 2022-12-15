@@ -1,6 +1,8 @@
 from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm
 from django import forms
 from .models import Members
+from buildings.models import *
+import django_filters
 
 
 class RegisterForm(UserCreationForm):
@@ -71,3 +73,33 @@ class ChangePasswordForm(PasswordChangeForm):
             attrs={"class": "form-control", "placeholder": "Confirm New Password"}
         ),
     )
+
+
+## Ticket Filter Form
+
+
+class TicketFilter(django_filters.FilterSet):
+    maintenance = django_filters.ModelChoiceFilter(
+        queryset=Maintenance.objects.all(),
+        widget=forms.Select(attrs={"class": "form-control-sm mx-2"}),
+        label="Maintenance",
+    )
+    department = django_filters.ModelChoiceFilter(
+        queryset=Department.objects.all(),
+        widget=forms.Select(attrs={"class": "form-control-sm mx-2"}),
+        label="Department",
+    )
+    room = django_filters.ModelChoiceFilter(
+        queryset=Room.objects.all(),
+        widget=forms.Select(attrs={"class": "form-control-sm mx-2"}),
+        label="Room",
+    )
+    status = django_filters.ChoiceFilter(
+        choices=Ticket.STATUS_CHOICES,
+        widget=forms.Select(attrs={"class": "form-control-sm mx-2"}),
+        label="Status",
+    )
+
+    class Meta:
+        model = Ticket
+        fields = ["maintenance", "department", "room", "status"]
