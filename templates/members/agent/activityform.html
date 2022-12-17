@@ -54,15 +54,15 @@
     <div class="content">
 
 
-      <h3 class="text-white" >Register</h3>
+      <h3 class="text-white" >Activity Creation</h3>
       <hr />
-      <form  action="{% url 'register' %}" method="POST">
+      <form  action="{% url 'activitycreation' %}" method="POST">
         {% csrf_token %}
         <div class="text-white">
         {{ form.as_p }}
        </div>
         <br>
-        <input type="submit" class="btn btn-primary" value="Register">
+        <input type="submit" class="btn btn-primary" value="Create">
         <hr />
 
       </form>

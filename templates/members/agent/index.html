@@ -19,6 +19,7 @@
          <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
        </svg>
      </button>
+     
    </div>
    <div class="app-content-actions">
      {% comment %} <input class="search-bar" placeholder="Search..." type="text" /> {% endcomment %}
@@ -160,7 +161,7 @@
            </div>
 
            <div class="product-cell category">
-             <span class="cell-label">Departemnt</span>
+             <span class="cell-label">Department</span>
              {% for dep in ticket.department.all %}
              <span class="department active">{{ dep }}</span>
              {% endfor %} 

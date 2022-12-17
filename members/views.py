@@ -9,8 +9,18 @@ from .forms import TicketFilter
 
 # importing HttpResponse
 from django.shortcuts import render
-from .forms import RegisterForm, ChangePasswordForm
+from .forms import RegisterForm, ChangePasswordForm,ActivityForm
 
+def activityCreation(request):
+    if request.method=='POST':
+        form=ActivityForm(request.POST)
+        if form.is_valid():
+            form.save()
+    else:
+        form=ActivityForm()
+    return render(request,"members/agent/activityform.html",{"form":form})
+        
+    
 
 def register_member(request):
     if request.method == "POST":

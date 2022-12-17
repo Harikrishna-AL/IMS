@@ -1,8 +1,29 @@
 from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm
 from django import forms
+from django.forms import ModelForm
 from .models import Members
 from buildings.models import *
 import django_filters
+from buildings.models import Activity
+
+class ActivityForm(ModelForm):
+    class Meta:
+        model= Activity
+        fields=['ticket','items','comments']
+
+    ticket=forms.ModelChoiceField(
+        queryset=Ticket.objects.all(),
+        label='Ticket'
+    ),
+    items = forms.ModelMultipleChoiceField(
+        queryset=Item.objects.all(),
+        widget=forms.CheckboxSelectMultiple
+    ),
+
+    comments=forms.CharField(
+        label="Comment",
+        max_length=100
+    )
 
 
 class RegisterForm(UserCreationForm):

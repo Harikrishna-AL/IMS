@@ -19,6 +19,11 @@
          <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
        </svg>
      </button>
+     <div class="ticket-button" style="margin-right: 9px">
+      <a href="{% url 'activitycreation' %}" role="button">
+        <button class="btn btn-primary btn-sm">Add Activity</button>
+      </a>
+    </div>
    </div>
    <div class="app-content-actions">
      <input class="search-bar" placeholder="Search..." type="text" />
@@ -128,9 +133,8 @@
            <div>             
             <a class="btn btn-sm btn-primary" href="{% url 'detail_activity' activity_id=activity.id %}" role="button">More details</a>
            </div>
-           
-
      </div>
+     
 
      {% endfor %}
    </div>
