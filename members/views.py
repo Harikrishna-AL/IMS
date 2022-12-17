@@ -3,9 +3,7 @@ from buildings.models import Ticket, Maintenance,Activity, ActivityItem
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-
-# from .utils import viewTickets
-from .forms import TicketFilter
+from .forms import TicketFilter,TicketForm
 
 # importing HttpResponse
 from django.shortcuts import render
@@ -92,8 +90,13 @@ def agent(request):
 
 @login_required(login_url="login")
 def customer(request):
-    return render(request, "members/customer/index.html")
-
+    customer_name = request.user
+    # customer_data = Ticket.objects.filter(created_by=customer_name)
+    tickets = Ticket.objects.all().filter(status="Pending",created_by=customer_name)
+    ticketFilter = TicketFilter(request.GET, queryset=tickets)
+    tickets = ticketFilter.qs
+    
+    return render(request, "members/customer/index.html", {"customer_data": tickets, "ticketFilter": ticketFilter})
 @login_required(login_url="login")
 def activity(request):
     activity = Activity.objects.all()
@@ -104,3 +107,23 @@ def detail_activity(request,activity_id):
     activity = Activity.objects.get(id=activity_id)
     item=ActivityItem.objects.all()
     return render(request, "members/activity/details.html", {"activity_data": activity,"item_data":item})
+
+@login_required(login_url="login")
+def create_ticket(request):
+    if request.method == "POST":
+
+        form = TicketForm(request.POST,initial={'created_by':request.user, 'room':request.user.room_no.pk})
+        if form.is_valid():
+            form.save()
+            message = form.cleaned_data.get("maintenance")
+            room = form.cleaned_data.get("room")    
+            department = form.cleaned_data.get("department")
+            created_by = form.cleaned_data.get("created_by")
+            comment = form.cleaned_data.get("message")
+            messages.success(request, "Ticket Created Successfully")
+            
+            return redirect("customer")
+            
+    else:
+        form = TicketForm(initial={'created_by':request.user, 'room':request.user.room_no})
+    return render(request, "members/customer/ticket.html", {"form": form})

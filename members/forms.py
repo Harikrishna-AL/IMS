@@ -103,3 +103,34 @@ class TicketFilter(django_filters.FilterSet):
     class Meta:
         model = Ticket
         fields = ["maintenance", "department", "room", "status"]
+
+
+class TicketForm(forms.ModelForm):
+    class Meta:
+        model = Ticket
+        fields = ["maintenance","room" ,"department","created_by",'message']
+    
+    created_by = forms.CharField(
+        disabled=True,
+        widget=forms.HiddenInput()
+    )
+   
+    maintenance = forms.ModelChoiceField(
+        queryset=Maintenance.objects.all(),
+        widget=forms.HiddenInput(),
+        initial='',
+        required=False,
+    )
+    room = forms.ModelChoiceField(
+
+        queryset=Room.objects.all(),
+        widget=forms.HiddenInput(),
+        label="Room",)
+   
+    message = forms.CharField(
+        label="Query",
+        max_length=100,
+        widget=forms.Textarea(
+            attrs={"class": "form-control", "placeholder": "Enter your message here"}
+        ),
+    )
