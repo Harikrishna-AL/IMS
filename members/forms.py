@@ -1,5 +1,6 @@
 from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm
 from django import forms
+from django.forms import ModelForm
 from .models import Members
 from buildings.models import *
 import django_filters
@@ -133,4 +134,24 @@ class TicketForm(forms.ModelForm):
         widget=forms.Textarea(
             attrs={"class": "form-control", "placeholder": "Enter your message here"}
         ),
+    )
+
+
+class ActivityForm(ModelForm):
+    class Meta:
+        model= Activity
+        fields=['ticket','items','comments']
+
+    ticket=forms.ModelChoiceField(
+        queryset=Ticket.objects.all(),
+        label='Ticket'
+    ),
+    items = forms.ModelMultipleChoiceField(
+        queryset=Item.objects.all(),
+        widget=forms.CheckboxSelectMultiple
+    ),
+
+    comments=forms.CharField(
+        label="Comment",
+        max_length=100
     )

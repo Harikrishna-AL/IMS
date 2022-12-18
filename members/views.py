@@ -3,7 +3,7 @@ from buildings.models import Ticket, Maintenance,Activity, ActivityItem
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from .forms import TicketFilter,TicketForm
+from .forms import ActivityForm, TicketFilter,TicketForm
 
 # importing HttpResponse
 from django.shortcuts import render
@@ -127,3 +127,17 @@ def create_ticket(request):
     else:
         form = TicketForm(initial={'created_by':request.user, 'room':request.user.room_no})
     return render(request, "members/customer/ticket.html", {"form": form})
+
+@login_required(login_url="login")
+def activityCreation(request):
+    if request.method=='POST':
+        form=ActivityForm(request.POST)
+        if form.is_valid():
+            form.save()
+
+            messages.success(request, "Activity Created Successfully")
+            return redirect("activity")
+
+    else:
+        form=ActivityForm()
+    return render(request,"members/agent/activityform.html",{"form":form})
