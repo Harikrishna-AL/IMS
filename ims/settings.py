@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     "django_crontab",
     "django_filters",
     "crispy_forms",
+    "userlog",
 ]
 APP_ORDER = [
     ("Buildings"),
