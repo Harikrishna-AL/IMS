@@ -109,25 +109,22 @@ class TicketFilter(django_filters.FilterSet):
 class TicketForm(forms.ModelForm):
     class Meta:
         model = Ticket
-        fields = ["maintenance","room" ,"department","created_by",'message']
-    
-    created_by = forms.CharField(
-        disabled=True,
-        widget=forms.HiddenInput()
-    )
-   
+        fields = ["maintenance", "room", "department", "created_by", "message"]
+
+    created_by = forms.CharField(disabled=True, widget=forms.HiddenInput())
+
     maintenance = forms.ModelChoiceField(
         queryset=Maintenance.objects.all(),
         widget=forms.HiddenInput(),
-        initial='',
+        initial="",
         required=False,
     )
     room = forms.ModelChoiceField(
-
         queryset=Room.objects.all(),
         widget=forms.HiddenInput(),
-        label="Room",)
-   
+        label="Room",
+    )
+
     message = forms.CharField(
         label="Query",
         max_length=100,
@@ -139,19 +136,14 @@ class TicketForm(forms.ModelForm):
 
 class ActivityForm(ModelForm):
     class Meta:
-        model= Activity
-        fields=['ticket','items','comments']
+        model = Activity
+        fields = ["ticket", "items", "comments"]
 
-    ticket=forms.ModelChoiceField(
-        queryset=Ticket.objects.all(),
-        label='Ticket'
-    ),
-    items = forms.ModelMultipleChoiceField(
-        queryset=Item.objects.all(),
-        widget=forms.CheckboxSelectMultiple
-    ),
-
-    comments=forms.CharField(
-        label="Comment",
-        max_length=100
+    ticket = (forms.ModelChoiceField(queryset=Ticket.objects.all(), label="Ticket"),)
+    items = (
+        forms.ModelMultipleChoiceField(
+            queryset=Item.objects.all(), widget=forms.CheckboxSelectMultiple
+        ),
     )
+
+    comments = forms.CharField(label="Comment", max_length=100)

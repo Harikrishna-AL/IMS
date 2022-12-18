@@ -3,7 +3,7 @@ from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 
 # Create your models here.
 from .managers import MemberManager
-from buildings.models import Department,Room
+from buildings.models import Department, Room
 
 
 class Members(AbstractBaseUser, PermissionsMixin):
@@ -23,6 +23,7 @@ class Members(AbstractBaseUser, PermissionsMixin):
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ["first_name", "last_name"]
     objects = MemberManager()
+
     class Meta:
         verbose_name = "Member"
         verbose_name_plural = "Members"

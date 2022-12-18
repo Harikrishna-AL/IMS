@@ -153,13 +153,15 @@ class Ticket(models.Model):
     )
     room = models.ForeignKey(Room, on_delete=models.CASCADE, null=True)
     message = models.TextField()  # about the maintenance
-    maintenance = models.ForeignKey(Maintenance, on_delete=models.CASCADE, null=True,blank=True)
+    maintenance = models.ForeignKey(
+        Maintenance, on_delete=models.CASCADE, null=True, blank=True
+    )
     STATUS_CHOICES = (
         ("Pending", "Pending"),
         ("Completed", "Completed"),
     )
     created_at = models.DateTimeField(auto_now_add=True)
-    created_by = models.CharField(max_length=255,default='Admin')
+    created_by = models.CharField(max_length=255, default="Admin")
 
     status = models.CharField(max_length=200, choices=STATUS_CHOICES, default="Pending")
 

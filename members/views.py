@@ -1,13 +1,16 @@
 from django.shortcuts import render, redirect
-from buildings.models import Ticket, Maintenance,Activity, ActivityItem
+from buildings.models import Ticket, Maintenance, Activity, ActivityItem
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from .forms import ActivityForm, TicketFilter,TicketForm
+from .forms import ActivityForm, TicketFilter, TicketForm
+from .utils import get_ip_address
+from userlog.models import UserLog
 
 # importing HttpResponse
 from django.shortcuts import render
 from .forms import RegisterForm, ChangePasswordForm
+from django.middleware import csrf
 
 
 def register_member(request):
@@ -33,6 +36,11 @@ def login_member(request):
         user = authenticate(request, username=username, password=password)
         ## If user exists, login and redirect to agent page or customer page
         if user is not None:
+            ipAddress = get_ip_address(request)
+            token = csrf.get_token(request)
+            UserLog.objects.create(
+                user=user, ipAddress=ipAddress, token=token, log_type="login"
+            )
             login(request, user)
             if user.is_agent:
                 print("Agent logged in")
@@ -65,6 +73,11 @@ def change_password(request):
 
 
 def logout_member(request):
+    ipAddress = get_ip_address(request)
+    token = csrf.get_token(request)
+    UserLog.objects.create(
+        user=request.user, ipAddress=ipAddress, token=token, log_type="logout"
+    )
     logout(request)
     return redirect("login")
 
@@ -92,46 +105,64 @@ def agent(request):
 def customer(request):
     customer_name = request.user
     # customer_data = Ticket.objects.filter(created_by=customer_name)
-    tickets = Ticket.objects.all().filter(status="Pending",created_by=customer_name)
+    tickets = Ticket.objects.all().filter(status="Pending", created_by=customer_name)
     ticketFilter = TicketFilter(request.GET, queryset=tickets)
     tickets = ticketFilter.qs
-    
-    return render(request, "members/customer/index.html", {"customer_data": tickets, "ticketFilter": ticketFilter})
+
+    return render(
+        request,
+        "members/customer/index.html",
+        {"customer_data": tickets, "ticketFilter": ticketFilter},
+    )
+
+
 @login_required(login_url="login")
 def activity(request):
     activity = Activity.objects.all()
     return render(request, "members/activity/index.html", {"activity_data": activity})
 
+
 @login_required(login_url="login")
-def detail_activity(request,activity_id):
+def detail_activity(request, activity_id):
     activity = Activity.objects.get(id=activity_id)
-    item=ActivityItem.objects.all()
-    return render(request, "members/activity/details.html", {"activity_data": activity,"item_data":item})
+    item = ActivityItem.objects.all()
+    return render(
+        request,
+        "members/activity/details.html",
+        {"activity_data": activity, "item_data": item},
+    )
+
 
 @login_required(login_url="login")
 def create_ticket(request):
     if request.method == "POST":
 
-        form = TicketForm(request.POST,initial={'created_by':request.user, 'room':request.user.room_no.pk})
+        form = TicketForm(
+            request.POST,
+            initial={"created_by": request.user, "room": request.user.room_no.pk},
+        )
         if form.is_valid():
             form.save()
             message = form.cleaned_data.get("maintenance")
-            room = form.cleaned_data.get("room")    
+            room = form.cleaned_data.get("room")
             department = form.cleaned_data.get("department")
             created_by = form.cleaned_data.get("created_by")
             comment = form.cleaned_data.get("message")
             messages.success(request, "Ticket Created Successfully")
-            
+
             return redirect("customer")
-            
+
     else:
-        form = TicketForm(initial={'created_by':request.user, 'room':request.user.room_no})
+        form = TicketForm(
+            initial={"created_by": request.user, "room": request.user.room_no}
+        )
     return render(request, "members/customer/ticket.html", {"form": form})
+
 
 @login_required(login_url="login")
 def activityCreation(request):
-    if request.method=='POST':
-        form=ActivityForm(request.POST)
+    if request.method == "POST":
+        form = ActivityForm(request.POST)
         if form.is_valid():
             form.save()
 
@@ -139,5 +170,5 @@ def activityCreation(request):
             return redirect("activity")
 
     else:
-        form=ActivityForm()
-    return render(request,"members/agent/activityform.html",{"form":form})
+        form = ActivityForm()
+    return render(request, "members/agent/activityform.html", {"form": form})
