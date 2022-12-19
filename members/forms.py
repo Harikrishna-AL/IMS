@@ -119,6 +119,12 @@ class TicketForm(forms.ModelForm):
         initial="",
         required=False,
     )
+    department = forms.ModelMultipleChoiceField(
+        queryset=Department.objects.all(),
+        widget=forms.SelectMultiple(attrs={"class": "form-control w-25 scrollable h-25"}),
+        label="Department",
+        required=True
+    )
     room = forms.ModelChoiceField(
         queryset=Room.objects.all(),
         widget=forms.HiddenInput(),
