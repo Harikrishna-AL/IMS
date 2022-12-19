@@ -100,4 +100,11 @@ class ActivityAdmin(admin.ModelAdmin):
     list_display = ("id", "comments", "closed_at")
     list_filter = ("id", "comments", "closed_at")
     search_fields = ("id", "comments", "closed_at")
-    inlines = [ActivityItemInline]
+    inlines = [ItemSwapInline]
+
+
+@admin.register(ItemSwap)
+class ItemSwapAdmin(admin.ModelAdmin):
+    list_display = ("items", "count")
+    list_filter = ("items__item_name", "count")
+    search_fields = ("items__item_name", "count")

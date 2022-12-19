@@ -1,19 +1,29 @@
 from django.shortcuts import render, redirect
-from buildings.models import Ticket, Maintenance, Activity, ActivityItem
+from buildings.models import Ticket, Maintenance, Activity, ItemSwap
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from .forms import ActivityForm, TicketFilter, TicketForm
+from .forms import (
+    ActivityForm,
+    TicketFilter,
+    TicketForm,
+    ChangePasswordForm,
+    RegisterForm,
+    ActivityFilter,
+)
 from .utils import get_ip_address
 from userlog.models import UserLog
 
 # importing HttpResponse
 from django.shortcuts import render
-from .forms import RegisterForm, ChangePasswordForm
 from django.middleware import csrf
+from django.forms.models import (
+    inlineformset_factory,
+)
 
 
 def register_member(request):
+    """Register a new user."""
     if request.method == "POST":
         form = RegisterForm(request.POST)
         if form.is_valid():
@@ -30,6 +40,7 @@ def register_member(request):
 
 
 def login_member(request):
+    """Login a user."""
     if request.method == "POST":
         username = request.POST.get("username")
         password = request.POST.get("password")
@@ -43,13 +54,11 @@ def login_member(request):
             )
             login(request, user)
             if user.is_agent:
-                print("Agent logged in")
                 return redirect("agent")
             else:
                 return redirect("customer")
         ## If user does not exist, redirect to login page
         else:
-            print("Username OR password is incorrect")
             messages.info(request, "Username OR password is incorrect")
             return redirect("login")
     else:
@@ -57,6 +66,7 @@ def login_member(request):
 
 
 def change_password(request):
+    """Change a user's password."""
     if request.method == "POST":
         form = ChangePasswordForm(data=request.POST, user=request.user)
         if form.is_valid():
@@ -73,6 +83,7 @@ def change_password(request):
 
 
 def logout_member(request):
+    """Logout a user."""
     ipAddress = get_ip_address(request)
     token = csrf.get_token(request)
     UserLog.objects.create(
@@ -84,14 +95,17 @@ def logout_member(request):
 
 @login_required(login_url="login")
 def detail_ticket(request, ticket_id):
+    """View details of a ticket."""
     ticket = Ticket.objects.get(id=ticket_id)
     return render(request, "members/tickets/details.html", {"ticket_data": ticket})
 
 
 @login_required(login_url="login")
 def agent(request):
-    # agent_data = viewTickets()
-    tickets = Ticket.objects.all().filter(status="Pending")
+    """View all tickets for an agent."""
+    tickets = (
+        Ticket.objects.all().filter(status="Pending").order_by("created_at").reverse()
+    )
     ticketFilter = TicketFilter(request.GET, queryset=tickets)
     tickets = ticketFilter.qs
     return render(
@@ -103,9 +117,14 @@ def agent(request):
 
 @login_required(login_url="login")
 def customer(request):
+    """View all tickets for a customer."""
     customer_name = request.user
-    # customer_data = Ticket.objects.filter(created_by=customer_name)
-    tickets = Ticket.objects.all().filter(status="Pending", created_by=customer_name)
+    tickets = (
+        Ticket.objects.all()
+        .filter(status="Pending", created_by=customer_name)
+        .order_by("created_at")
+        .reverse()
+    )
     ticketFilter = TicketFilter(request.GET, queryset=tickets)
     tickets = ticketFilter.qs
 
@@ -118,23 +137,32 @@ def customer(request):
 
 @login_required(login_url="login")
 def activity(request):
-    activity = Activity.objects.all()
-    return render(request, "members/activity/index.html", {"activity_data": activity})
+    """View all activities."""
+    activity = Activity.objects.all().order_by("closed_at").reverse()
+    activityFilter = ActivityFilter(request.GET, queryset=activity)
+    activity = activityFilter.qs
+    return render(
+        request,
+        "members/activity/index.html",
+        {"activity_data": activity, "activityFilter": activityFilter},
+    )
 
 
 @login_required(login_url="login")
 def detail_activity(request, activity_id):
+    """View details of an activity."""
     activity = Activity.objects.get(id=activity_id)
-    item = ActivityItem.objects.all()
+    swap_items = ItemSwap.objects.all().filter(activity=activity_id)
     return render(
         request,
         "members/activity/details.html",
-        {"activity_data": activity, "item_data": item},
+        {"activity_data": activity, "item_data": swap_items},
     )
 
 
 @login_required(login_url="login")
 def create_ticket(request):
+    """Create a new ticket."""
     if request.method == "POST":
 
         form = TicketForm(
@@ -161,14 +189,37 @@ def create_ticket(request):
 
 @login_required(login_url="login")
 def activityCreation(request):
-    if request.method == "POST":
-        form = ActivityForm(request.POST)
-        if form.is_valid():
-            form.save()
+    """Activity Creation Form"""
+    ActivityFormSet = inlineformset_factory(
+        Activity, ItemSwap, fields="__all__", extra=0, can_delete=False
+    )
 
+    if request.method == "POST":
+        form = ActivityForm(request.POST or None)
+        formset = ActivityFormSet(request.POST or None)
+        if form.is_valid() and formset.is_valid():
+            activity = form.save()
+            ## Check if all the departments have completed the activity
+            ## If yes, change the status of the ticket to completed
+            ticket = Ticket.objects.get(activity=activity)
+            if ticket.activity_set.all().count() == ticket.department.all().count():
+                ticket.status = "Completed"
+                ticket.save()
+            for form in formset.forms:
+                item = form.save(commit=False)
+                item.activity = activity
+                item.save()
             messages.success(request, "Activity Created Successfully")
             return redirect("activity")
 
+        else:
+            messages.error(request, "Activity Creation Failed")
+            return redirect("activity")
     else:
         form = ActivityForm()
-    return render(request, "members/agent/activityform.html", {"form": form})
+        formset = ActivityFormSet()
+        return render(
+            request,
+            "members/agent/activityform.html",
+            {"form": form, "formset": formset},
+        )

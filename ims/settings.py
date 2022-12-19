@@ -107,20 +107,21 @@ ADMIN_REORDER = (
     {"app": "admin_interface", "label": "Admin Interface"},
     {"app": "auth", "models": ("auth.User", "auth.Group")},
     {"app": "members", "label": "Members", "models": ("members.Members",)},
+    {"app": "userlog", "label": "User Log", "models": ("userlog.UserLog",)},
     {
         "app": "buildings",
         "label": "Buildings",
         "models": (
+            "buildings.Department",
             "buildings.Building",
             "buildings.Block",
             "buildings.Floor",
+            "buildings.RoomType",
             "buildings.Room",
             "buildings.Item",
-            "buildings.Department",
             "buildings.Maintenance",
             "buildings.Ticket",
             "buildings.Activity",
-            "buildings.RoomType",
         ),
     },
 )

@@ -137,13 +137,12 @@ class TicketForm(forms.ModelForm):
 class ActivityForm(ModelForm):
     class Meta:
         model = Activity
-        fields = ["ticket", "items", "comments"]
+        fields = ["ticket", "comments"]
 
-    ticket = (forms.ModelChoiceField(queryset=Ticket.objects.all(), label="Ticket"),)
-    items = (
-        forms.ModelMultipleChoiceField(
-            queryset=Item.objects.all(), widget=forms.CheckboxSelectMultiple
-        ),
+
+class ActivityFilter(django_filters.FilterSet):
+    ticket = django_filters.ModelChoiceFilter(
+        queryset=Ticket.objects.all(),
+        widget=forms.Select(attrs={"class": "form-control-sm mx-2"}),
+        label="Ticket",
     )
-
-    comments = forms.CharField(label="Comment", max_length=100)
