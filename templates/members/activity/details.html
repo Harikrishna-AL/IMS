@@ -5,21 +5,6 @@
 <div class="app-content">
   <div class="app-content-header">
     <h1 class="app-content-headerText">Activity</h1>
-    <!-- <button class="mode-switch" title="Switch Theme">
-      <svg
-        class="moon"
-        fill="none"
-        stroke="currentColor"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        stroke-width="2"
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-      >
-        <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
-      </svg>
-    </button> -->
   </div>
   <div class="app-content-actions">
     <div class="app-content-actions-wrapper">
@@ -79,7 +64,7 @@
               <th>Item</th>
               <th>Count</th>
             </tr>
-            {% for item in item_data.all %}
+            {% for item in item_data %}
             <tr>
               <td> {{item.items}} </td>
               <td class="align"> {{item.count}} </td>
