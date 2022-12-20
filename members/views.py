@@ -11,7 +11,7 @@ from .forms import (
     RegisterForm,
     ActivityFilter,
 )
-from .utils import get_ip_address
+from .utils import get_ip_address, ticketData
 from userlog.models import UserLog
 
 # importing HttpResponse
@@ -20,6 +20,8 @@ from django.middleware import csrf
 from django.forms.models import (
     inlineformset_factory,
 )
+from rest_framework.views import APIView
+from rest_framework.response import Response
 
 
 def register_member(request):
@@ -223,3 +225,16 @@ def activityCreation(request):
             "members/agent/activityform.html",
             {"form": form, "formset": formset},
         )
+
+    
+class reportAPI(APIView):
+    authentication_classes = []
+    permission_classes = []
+
+    def get(self, request, format = None):
+        data = ticketData()
+        return Response(data)
+def report(request):
+    report_data = list(ticketData())
+    # report_data = dumps(report_data)
+    return render(request, "members/report/index.html")

@@ -160,7 +160,7 @@ class Ticket(models.Model):
         ("Pending", "Pending"),
         ("Completed", "Completed"),
     )
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateField(auto_now_add=True)
     created_by = models.CharField(max_length=255, default="Admin")
     ##TODO: add assigned_to field to assign ticket to a particular user
 
