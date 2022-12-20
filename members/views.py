@@ -3,6 +3,9 @@ from buildings.models import Ticket, Maintenance, Activity, ItemSwap
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.core.paginator import Paginator,EmptyPage,PageNotAnInteger
+
+
 from .forms import (
     ActivityForm,
     TicketFilter,
@@ -144,10 +147,16 @@ def activity(request):
     activity = Activity.objects.all().order_by("closed_at").reverse()
     activityFilter = ActivityFilter(request.GET, queryset=activity)
     activity = activityFilter.qs
+
+    p=Paginator(activity,10)
+    page = request.GET.get('page')
+    activities= p.get_page(page)
+
+
     return render(
         request,
         "members/activity/index.html",
-        {"activity_data": activity, "activityFilter": activityFilter},
+        {"activity_data": activity, "activityFilter": activityFilter,"activities":activities},
     )
 
 
@@ -221,11 +230,15 @@ def activityCreation(request):
     else:
         form = ActivityForm()
         formset = ActivityFormSet()
+    
+    
         return render(
             request,
             "members/agent/activityform.html",
             {"form": form, "formset": formset},
         )
+
+
 
 
 class reportAPI(APIView):
