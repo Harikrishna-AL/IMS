@@ -10,6 +10,7 @@ from .forms import (
     ChangePasswordForm,
     RegisterForm,
     ActivityFilter,
+    EditProfile,
 )
 from .utils import get_ip_address, ticketData
 from userlog.models import UserLog
@@ -169,7 +170,7 @@ def create_ticket(request):
 
         form = TicketForm(
             request.POST,
-            initial={"created_by": request.user, "room": request.user.room_no.pk},
+            initial={"created_by": request.user.pk, "room": request.user.room_no.pk},
         )
         if form.is_valid():
             form.save()
@@ -226,15 +227,36 @@ def activityCreation(request):
             {"form": form, "formset": formset},
         )
 
-    
+
 class reportAPI(APIView):
     authentication_classes = []
     permission_classes = []
 
-    def get(self, request, format = None):
+    def get(self, request, format=None):
         data = ticketData()
         return Response(data)
+
 def report(request):
     report_data = list(ticketData())
     # report_data = dumps(report_data)
     return render(request, "members/report/index.html")
+
+
+@login_required(login_url="login")
+def profile(request):
+    form = EditProfile(request.POST or None, instance=request.user)
+    userTickets = Ticket.objects.filter(created_by=request.user)
+    if form.is_valid():
+        form.save()
+        first_name = form.cleaned_data.get("first_name")
+        last_name = form.cleaned_data.get("last_name")
+        email = form.cleaned_data.get("email")
+        room_no = form.cleaned_data.get("room_no")
+
+        # update tickets created by the user
+        userTickets.update(room=room_no)
+        userTickets.update(created_by=request.user)
+        messages.success(request, "Profile Updated Successfully")
+
+        return redirect("customer")
+    return render(request, "members/customer/profile.html", {"form": form})

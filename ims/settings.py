@@ -34,7 +34,7 @@ AUTH_USER_MODEL = "members.Members"
 # Application definition
 
 INSTALLED_APPS = [
-    'rest_framework',
+    "rest_framework",
     "buildings",
     "admin_interface",
     "members",

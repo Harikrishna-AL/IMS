@@ -18,5 +18,6 @@ urlpatterns = [
     path("change_password/", views.change_password, name="change_password"),
     path("ticket/", views.create_ticket, name="ticket"),
     path("activity/activitycreation/", views.activityCreation, name="activitycreation"),
-    path("report/",views.report,name="report")
+    path("report/", views.report, name="report"),
+    path("customer/profile/", views.profile, name="profile"),
 ]
