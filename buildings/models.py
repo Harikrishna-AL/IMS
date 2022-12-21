@@ -161,7 +161,14 @@ class Ticket(models.Model):
         ("Completed", "Completed"),
     )
     created_at = models.DateField(auto_now_add=True)
-    created_by = models.CharField(max_length=255, default="Admin")
+    created_by = models.ForeignKey(
+        "members.Members",
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        related_name="ticket_created_by",
+    )
+
     ##TODO: add assigned_to field to assign ticket to a particular user
 
     status = models.CharField(max_length=200, choices=STATUS_CHOICES, default="Pending")

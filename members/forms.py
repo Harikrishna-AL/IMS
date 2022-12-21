@@ -111,8 +111,11 @@ class TicketForm(forms.ModelForm):
         model = Ticket
         fields = ["maintenance", "room", "department", "created_by", "message"]
 
-    created_by = forms.CharField(disabled=True, widget=forms.HiddenInput())
-
+    created_by = forms.ModelChoiceField(
+        queryset=Members.objects.filter(),
+        widget=forms.HiddenInput(),
+        disabled=True,
+    )
     maintenance = forms.ModelChoiceField(
         queryset=Maintenance.objects.all(),
         widget=forms.HiddenInput(),
@@ -121,9 +124,11 @@ class TicketForm(forms.ModelForm):
     )
     department = forms.ModelMultipleChoiceField(
         queryset=Department.objects.all(),
-        widget=forms.SelectMultiple(attrs={"class": "form-control w-25 scrollable h-25"}),
+        widget=forms.SelectMultiple(
+            attrs={"class": "form-control w-25 scrollable h-25"}
+        ),
         label="Department",
-        required=True
+        required=True,
     )
     room = forms.ModelChoiceField(
         queryset=Room.objects.all(),
@@ -145,10 +150,53 @@ class ActivityForm(ModelForm):
         model = Activity
         fields = ["ticket", "comments"]
 
+    ticket = forms.ModelChoiceField(
+        queryset=Ticket.objects.all().filter(status="Pending"),
+        label="Ticket",
+    )
+
 
 class ActivityFilter(django_filters.FilterSet):
     ticket = django_filters.ModelChoiceFilter(
         queryset=Ticket.objects.all(),
         widget=forms.Select(attrs={"class": "form-control-sm mx-2"}),
         label="Ticket",
+    )
+
+
+class EditProfile(forms.ModelForm):
+    class Meta:
+        model = Members
+        fields = ["first_name", "last_name", "email", "room_no"]
+
+    first_name = forms.CharField(
+        label="First Name",
+        max_length=100,
+        widget=forms.TextInput(
+            attrs={"class": "form-control", "placeholder": "First Name"}
+        ),
+    )
+    last_name = forms.CharField(
+        label="Last Name",
+        max_length=100,
+        widget=forms.TextInput(
+            attrs={"class": "form-control", "placeholder": "Last Name"}
+        ),
+    )
+    email = forms.EmailField(
+        label="Email",
+        max_length=100,
+        widget=forms.EmailInput(
+            attrs={"class": "form-control", "placeholder": "Email"}
+        ),
+    )
+    room_no = forms.ModelChoiceField(
+        queryset=Room.objects.all(),
+        widget=forms.Select(
+            attrs={
+                "class": "form-control",
+                "placeholder": "Room",
+            }
+        ),
+        label="Room",
     )

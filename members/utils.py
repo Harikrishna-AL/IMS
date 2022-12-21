@@ -1,5 +1,6 @@
 # import datetime
 from buildings.models import Ticket, Maintenance, Department
+
 # from .forms import TicketFilter
 
 
@@ -35,6 +36,9 @@ def ticketData():
         for i in departments:
             chartdata.append(len(day_data.filter(department__name=i).values()))
             # department[i] = len(day_data.filter(department__name=i).values())
-        data[date.strftime("%d/%m/%Y")] = {"labels":departments,"chartdata":chartdata}
-        
+        data[date.strftime("%d/%m/%Y")] = {
+            "labels": departments,
+            "chartdata": chartdata,
+        }
+
     return data
