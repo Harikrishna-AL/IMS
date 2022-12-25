@@ -16,24 +16,28 @@
     </div>
     {% endif %}
   </div>
-</div>
 
-<div class="app-content">
-  <div class="app-content-header">
-    <h1 class="app-content-headerText">Edit Profile</h1>
-  </div>
+  <div class="app-content">
+    <div class="app-content-header">
+      <h1 class="app-content-headerText">Edit Profile</h1>
+    </div>
 
-  <div class="div-center" style="padding-top: 50px">
-    <div class="profile_content">
-      <form action="" method="POST">
-        {% csrf_token %}
-        <div class="text-white">{{ form.as_p }}</div>
+    <div class="div-center" style="padding-top: 50px">
+      <div class="profile_content">
+        <form action="" method="POST">
+          {% csrf_token %}
+          <div class="text-white">{{ form.as_p }}</div>
 
-        <br />
-        <center>
-          <input type="submit" class="btn btn-primary" value="Update Profile" />
-        </center>
-      </form>
+          <br />
+          <center>
+            <input
+              type="submit"
+              class="btn btn-primary"
+              value="Update Profile"
+            />
+          </center>
+        </form>
+      </div>
     </div>
   </div>
 </div>
