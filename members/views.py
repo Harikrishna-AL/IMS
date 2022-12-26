@@ -236,6 +236,7 @@ class reportAPI(APIView):
         data = ticketData()
         return Response(data)
 
+
 def report(request):
     report_data = list(ticketData())
     # report_data = dumps(report_data)
