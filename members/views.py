@@ -3,7 +3,7 @@ from buildings.models import Ticket, Maintenance, Activity, ItemSwap
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.core.paginator import Paginator,EmptyPage,PageNotAnInteger
+from django.core.paginator import Paginator
 
 
 from .forms import (
@@ -134,10 +134,13 @@ def customer(request):
     ticketFilter = TicketFilter(request.GET, queryset=tickets)
     tickets = ticketFilter.qs
 
+    p=Paginator(tickets,10)
+    page=request.GET.get('page')
+    tickets_p=p.get_page(page)
     return render(
         request,
         "members/customer/index.html",
-        {"customer_data": tickets, "ticketFilter": ticketFilter},
+        {"customer_data": tickets, "ticketFilter": ticketFilter,"tickets_p":tickets_p},
     )
 
 
