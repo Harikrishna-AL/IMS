@@ -145,7 +145,13 @@ class Maintenance(models.Model):
         Department, related_name="maintenance_department"
     )
     rooms = models.ManyToManyField(Room, related_name="maintenance_rooms")
-
+    admin = models.ForeignKey(
+        "members.Members",
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        related_name="created_admin",
+    )
     def __str__(self):
         return self.maintenance_name
 

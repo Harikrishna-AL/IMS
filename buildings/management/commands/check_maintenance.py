@@ -21,6 +21,7 @@ class Command(BaseCommand):
                                 maintenance=maintenance,
                                 room=room,
                                 message=maintenance.maintenance_description,
+                                created_by=maintenance.admin,
                             )
                             ## Add the departments to the ticket.
                             maintenance_departments = maintenance.departments.all()
@@ -37,6 +38,7 @@ class Command(BaseCommand):
                                 maintenance=maintenance,
                                 room=room,
                                 message=maintenance.maintenance_description,
+                                created_by=maintenance.admin,
                             )
                             ## Add the departments to the ticket.
                             maintenance_departments = maintenance.departments.all()
@@ -53,6 +55,7 @@ class Command(BaseCommand):
                                 maintenance=maintenance,
                                 room=room,
                                 message=maintenance.maintenance_description,
+                                created_by=maintenance.admin,
                             )
                             ## Add the departments to the ticket.
                             maintenance_departments = maintenance.departments.all()
@@ -69,6 +72,7 @@ class Command(BaseCommand):
                                 maintenance=maintenance,
                                 room=room,
                                 message=maintenance.maintenance_description,
+                                created_by=maintenance.admin,
                             )
                             ## Add the departments to the ticket.
                             maintenance_departments = maintenance.departments.all()
@@ -85,6 +89,7 @@ class Command(BaseCommand):
                                 maintenance=maintenance,
                                 room=room,
                                 message=maintenance.maintenance_description,
+                                created_by=maintenance.admin,
                             )
                             ## Add the departments to the ticket.
                             maintenance_departments = maintenance.departments.all()
@@ -101,6 +106,7 @@ class Command(BaseCommand):
                                 maintenance=maintenance,
                                 room=room,
                                 message=maintenance.maintenance_description,
+                                created_by=maintenance.admin,
                             )
                             ## Add the departments to the ticket.
                             maintenance_departments = maintenance.departments.all()
