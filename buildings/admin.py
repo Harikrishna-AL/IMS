@@ -84,7 +84,11 @@ class MaintenanceAdmin(admin.ModelAdmin):
     search_fields = ("maintenance_name", "maintenance_date")
     select2 = select2_modelform(Maintenance, attrs={"width": "250px"})
     form = select2
-
+    
+    exclude = ('admin',)  
+    def save_model(self, request, obj, form, change):
+        obj.admin = request.user
+        obj.save()
 
 @admin.register(Ticket)
 class TicketAdmin(admin.ModelAdmin):
