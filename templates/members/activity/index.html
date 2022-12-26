@@ -134,9 +134,10 @@
     </div>
 
     {% endfor %}
-    
+  
   </div>
-
+  
+<div class="footer">
   <nav aria-label="... ">
     <ul class="pagination">
   {% if activities.has_previous %}
@@ -152,12 +153,13 @@
 
 
   {% comment %} <li class="page-item disabled"><a class="page-link" href="#"> Page {{activities.number}} of {{ activities.paginator.num_pages }}</a></li> {% endcomment %}
-  
+
   {% for i in activities.paginator.page_range %}
       {% if activities.number == i %}
         <li class="active"><a class="page-link"><span>{{ i }} <span class="sr-only"></span></span></li></a>
       {% else %}
         <li><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+
       {% endif %}
     {% endfor %}
 
@@ -176,6 +178,7 @@
   
   </ul>
   </nav>
+</div>
 </div>
 
 {% endblock %}
