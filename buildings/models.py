@@ -7,7 +7,7 @@ from django.core.exceptions import ValidationError
 
 class Building(models.Model):
     id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=200)
+    name = models.CharField(max_length=200, unique=True)
     address = models.CharField(max_length=200)
     city = models.CharField(max_length=200)
     state = models.CharField(max_length=200, default="state")
@@ -21,7 +21,7 @@ class Building(models.Model):
 
 class Block(models.Model):
 
-    name = models.CharField(max_length=200)
+    name = models.CharField(max_length=200, unique=True)
     floors = models.IntegerField()
     id = models.AutoField(primary_key=True)
     building = models.ForeignKey(Building, on_delete=models.CASCADE, null=True)
@@ -39,7 +39,9 @@ class Floor(models.Model):
     def clean(self):
         floor_no_block = self.block.floors
         floor_count = self.block.floor_set.all().count()
-        if floor_no_block < floor_count + 1:
+        floor_exist = self.block.floor_set.filter(id=self.id).exists()
+
+        if (not floor_exist) and (floor_no_block < floor_count + 1):
             raise ValidationError("Block Floor Limit exceeded!")
 
     def save(self, *args, **kwargs):
@@ -52,7 +54,7 @@ class Floor(models.Model):
 
 class Department(models.Model):
     id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=200)
+    name = models.CharField(max_length=200, unique=True)
 
     def __str__(self):
         return self.name
@@ -60,7 +62,7 @@ class Department(models.Model):
 
 class Item(models.Model):
     id = models.AutoField(primary_key=True)
-    item_name = models.CharField(max_length=200)
+    item_name = models.CharField(max_length=200, unique=True)
     department = models.ForeignKey(Department, on_delete=models.CASCADE, null=True)
     item_type = models.CharField(
         max_length=100,
@@ -82,7 +84,7 @@ class Item(models.Model):
 
 class RoomType(models.Model):
     id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=200)
+    name = models.CharField(max_length=200, unique=True)
 
     def __str__(self):
         return self.name
@@ -103,7 +105,9 @@ class Room(models.Model):
     def clean(self):
         room_no_floor = self.floor.no_rooms
         rooms_count = self.floor.room_set.all().count()
-        if room_no_floor < rooms_count + 1:
+        room_exist = self.floor.room_set.filter(id=self.id).exists()
+        ## if room does not exist, then raise an error
+        if (not room_exist) and (room_no_floor < rooms_count + 1):
             raise ValidationError("Floor Room Limit exceeded!")
 
     def save(self, *args, **kwargs):
@@ -131,7 +135,7 @@ class Maintenance(models.Model):
         ("Yearly", "Yearly"),
     )
     id = models.AutoField(primary_key=True)
-    maintenance_name = models.CharField(max_length=200)
+    maintenance_name = models.CharField(max_length=200, unique=True)
     maintenance_date = models.DateField()
     maintenance_description = models.TextField()
     maintenance_type = models.CharField(
