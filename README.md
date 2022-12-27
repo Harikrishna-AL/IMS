@@ -34,6 +34,7 @@ Install the project dependencies from `requirements.txt`
 
 * `python manage.py makemigrations` to commit the database version
 * `python manage.py migrate --run-syncdb` - set up database
+* `python manage.py loaddata data.json` - load dummy database
 * `python manage.py createsuperuser` - create admin user
 * `python manage.py runserver`  - run the project locally
 
