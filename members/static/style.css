@@ -46,7 +46,10 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-
+.filter-row{
+  font-size: 14px;
+  color: #fff;
+}
 .app-container {
   border-radius: 4px;
   width: 100%;
