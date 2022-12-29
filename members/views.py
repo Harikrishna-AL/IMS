@@ -114,10 +114,13 @@ def agent(request):
     )
     ticketFilter = TicketFilter(request.GET, queryset=tickets)
     tickets = ticketFilter.qs
+    p=Paginator(tickets,10)
+    page=request.GET.get('page')
+    tickets_p=p.get_page(page)
     return render(
         request,
         "members/agent/index.html",
-        {"agent_data": tickets, "ticketFilter": ticketFilter},
+        {"agent_data": tickets, "ticketFilter": ticketFilter,"tickets_p":tickets_p},
     )
 
 
@@ -237,7 +240,7 @@ def activityCreation(request):
     
         return render(
             request,
-            "members/agent/activityform.html",
+            "members/agent/activitycreation.html",
             {"form": form, "formset": formset},
         )
 

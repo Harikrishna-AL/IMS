@@ -170,7 +170,7 @@ class Ticket(models.Model):
         ("Pending", "Pending"),
         ("Completed", "Completed"),
     )
-    created_at = models.DateField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True)
     created_by = models.ForeignKey(
         "members.Members",
         on_delete=models.CASCADE,
