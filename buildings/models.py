@@ -152,8 +152,20 @@ class Maintenance(models.Model):
         blank=True,
         related_name="created_admin",
     )
+
     def __str__(self):
         return self.maintenance_name
+
+
+class Assignee(models.Model):
+    id = models.BigAutoField(primary_key=True)
+    agent = models.ForeignKey(
+        "members.Members", on_delete=models.CASCADE, null=True, blank=True
+    )
+    is_assigned = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.agent.email
 
 
 class Ticket(models.Model):
@@ -180,6 +192,9 @@ class Ticket(models.Model):
     )
 
     ##TODO: add assigned_to field to assign ticket to a particular user
+    agents_assigned = models.ManyToManyField(
+        Assignee, related_name="agents_assigned", blank=True, null=True
+    )
 
     status = models.CharField(max_length=200, choices=STATUS_CHOICES, default="Pending")
 
