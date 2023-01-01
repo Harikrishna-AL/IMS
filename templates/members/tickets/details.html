@@ -7,6 +7,21 @@
     <h1 class="app-content-headerText">Tickets</h1>
     
   </div>
+  <div class="back">
+    <div class="container">
+      {% if messages %} {% for message in messages %}
+      <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        <strong>{{ message }}</strong>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="alert"
+          aria-label="Close"
+        ></button>
+      </div>
+      {% endfor %} {% endif %}
+    </div>
+  </div>
   <div class="app-content-actions">
     <div class="app-content-actions-wrapper">
       <div class="filter-button-wrapper">
@@ -97,6 +112,38 @@
             Created By: {{ticket_data.created_by}}
           </li>
         </ul>
+        <br />
+        <!-- Assign to button -->
+        <div class="d-flex flex-row flex-wrap align-content-start align-items-stretch px-3">
+        
+        {% for assign in assigned_agent_data%}
+        
+          {% if assign.is_assigned is True %}
+          <div class="mx-3">
+            <p class="text-white px-1">{{assign.department}}</p>
+            <a
+            class="btn btn-primary btn-sm m-2"
+            href="{% url 'assign_ticket' ticket_id=ticket_data.id department=assign.department %}"
+            role="button"
+            >unassign</a>
+            <p class="text-white">Assigned to {{assign.agent_email}}</p>
+            </div>
+          {% else %}
+          <div class="mx-3">
+            <p class="text-white px-1">{{assign.department}}</p>
+            <a
+            class="btn btn-warning btn-sm m-2 px-3"
+            href="{% url 'assign_ticket' ticket_id=ticket_data.id department=assign.department %}"
+            role="button"
+            >assign</a>
+            <span class="text-white">No Agent Assigned</span>
+            </div>
+          {% endif %}
+        {% endfor %}
+        </div>
+        
+        <!-- Assign to button -->
+
       </div>
     </div>
   </div>

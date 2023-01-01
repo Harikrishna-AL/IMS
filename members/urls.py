@@ -20,4 +20,9 @@ urlpatterns = [
     path("activity/activitycreation/", views.activityCreation, name="activitycreation"),
     path("report/", views.report, name="report"),
     path("customer/profile/", views.profile, name="profile"),
+    path(
+        "assign_ticket/<int:ticket_id>/<str:department>",
+        views.assign_agent,
+        name="assign_ticket",
+    ),
 ]

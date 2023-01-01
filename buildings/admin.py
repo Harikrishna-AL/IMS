@@ -14,6 +14,7 @@ from .models import (
     Ticket,
     Activity,
     RoomType,
+    Assignee,
 )
 from django.contrib import admin
 
@@ -84,11 +85,22 @@ class MaintenanceAdmin(admin.ModelAdmin):
     search_fields = ("maintenance_name", "maintenance_date")
     select2 = select2_modelform(Maintenance, attrs={"width": "250px"})
     form = select2
-    
-    exclude = ('admin',)  
+
+    exclude = ("admin",)
+
     def save_model(self, request, obj, form, change):
         obj.admin = request.user
         obj.save()
+
+
+@admin.register(Assignee)
+class AssigneeAdmin(admin.ModelAdmin):
+    list_display = ("agent", "is_assigned")
+    list_filter = ("agent", "is_assigned")
+    search_fields = ("agent__first_name", "is_assigned")
+    select2 = select2_modelform(Assignee, attrs={"width": "250px"})
+    form = select2
+
 
 @admin.register(Ticket)
 class TicketAdmin(admin.ModelAdmin):
