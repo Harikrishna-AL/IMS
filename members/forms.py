@@ -146,14 +146,18 @@ class TicketForm(forms.ModelForm):
 
 
 class ActivityForm(ModelForm):
+    def __init__(self, *args, **kwargs):
+
+        self.agent = kwargs.pop("agent")
+        super().__init__(*args, **kwargs)
+
+        self.fields["ticket"].queryset = Ticket.objects.all().filter(
+            status="Pending", agents_assigned__agent=self.agent
+        )
+
     class Meta:
         model = Activity
         fields = ["ticket", "comments"]
-
-    ticket = forms.ModelChoiceField(
-        queryset=Ticket.objects.all().filter(status="Pending"),
-        label="Ticket",
-    )
 
 
 class ActivityFilter(django_filters.FilterSet):
