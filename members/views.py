@@ -411,9 +411,9 @@ def activityCreation(request):
     ActivityFormSet = inlineformset_factory(
         Activity, ItemSwap, fields="__all__", extra=0, can_delete=False
     )
-
+    agent = Members.objects.get(email=request.user.email)
     if request.method == "POST":
-        form = ActivityForm(request.POST or None)
+        form = ActivityForm(request.POST or None, agent=agent)
         formset = ActivityFormSet(request.POST or None)
         if form.is_valid() and formset.is_valid():
             activity = form.save()
@@ -439,7 +439,7 @@ def activityCreation(request):
 
         return render(
             request,
-            "members/agent/activitycreation.html",
+            "members/agent/activityform.html",
             {"form": form, "formset": formset},
         )
 
