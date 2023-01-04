@@ -28,7 +28,9 @@ urlpatterns = [
         "members/", include("django.contrib.auth.urls")
     ),  ## login/logout functionality from django
     path("members/", include("members.urls")),
-    path("api", views.reportAPI.as_view()),
+    path("graph_api", views.reportAPI.as_view()),
+    path("table_api", views.tableAPI.as_view()),
+    path("buildingWise_api", views.buildingAPI.as_view()),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
