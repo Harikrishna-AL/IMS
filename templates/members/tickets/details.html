@@ -121,26 +121,31 @@
           {% if assign.is_assigned is True %}
           <div class="mx-3">
             <p class="text-white px-1">{{assign.department}}</p>
+            {% if user.is_authenticated and not user.is_customer %}
             <a
             class="btn btn-primary btn-sm m-2"
             href="{% url 'assign_ticket' ticket_id=ticket_data.id department=assign.department %}"
             role="button"
             >unassign</a>
+            {% endif %}
             <p class="text-white">Assigned to {{assign.agent_email}}</p>
             </div>
           {% else %}
           <div class="mx-3">
             <p class="text-white px-1">{{assign.department}}</p>
+            {% if user.is_authenticated and not user.is_customer %}
             <a
             class="btn btn-warning btn-sm m-2 px-3"
             href="{% url 'assign_ticket' ticket_id=ticket_data.id department=assign.department %}"
             role="button"
             >assign</a>
+            {% endif %}
             <span class="text-white">No Agent Assigned</span>
             </div>
           {% endif %}
         {% endfor %}
         </div>
+        
         
         <!-- Assign to button -->
 
