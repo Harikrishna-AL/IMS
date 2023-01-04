@@ -163,7 +163,7 @@ class Assignee(models.Model):
         "members.Members", on_delete=models.CASCADE, null=True, blank=True
     )
     is_assigned = models.BooleanField(default=False)
-
+    assigned_at = models.DateTimeField(auto_now_add=True)
     def __str__(self):
         return self.agent.email
 
