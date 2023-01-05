@@ -164,6 +164,7 @@ class Assignee(models.Model):
     )
     is_assigned = models.BooleanField(default=False)
     assigned_at = models.DateTimeField(auto_now_add=True)
+
     def __str__(self):
         return self.agent.email
 

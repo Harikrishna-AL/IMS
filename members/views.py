@@ -452,6 +452,7 @@ class reportAPI(APIView):
         data = ticketData()
         return Response(data)
 
+
 class tableAPI(APIView):
     authentication_classes = []
     permission_classes = []
@@ -461,6 +462,7 @@ class tableAPI(APIView):
 
         return Response(data)
 
+
 class buildingAPI(APIView):
     authentication_classes = []
     permission_classes = []
@@ -469,6 +471,8 @@ class buildingAPI(APIView):
         data = buildingWiseData()
 
         return Response(data)
+
+
 def report(request):
     """report page
 
