@@ -434,7 +434,7 @@ def activityCreation(request):
             messages.error(request, "Activity Creation Failed")
             return redirect("activity")
     else:
-        form = ActivityForm()
+        form = ActivityForm(request.POST or None, agent=agent)
         formset = ActivityFormSet()
 
         return render(
