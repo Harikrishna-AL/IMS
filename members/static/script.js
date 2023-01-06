@@ -1,26 +1,15 @@
-// document.querySelector(".jsFilter").addEventListener("click", function () {
-//   document.querySelector(".filter-menu").classList.toggle("active");
-// });
+// Description: Removes trailing comma from product titles
+function strip_title() {
+  var classname = document.getElementsByClassName("product-cell category");
+  
+  for (var i = 0; i < classname.length; i++) {
+    var title = classname[i].getAttribute("title");
+    if (title == null) {
+      continue;
+    }
 
-// document.querySelector(".grid").addEventListener("click", function () {
-//   document.querySelector(".list").classList.remove("active");
-//   document.querySelector(".grid").classList.add("active");
-//   document.querySelector(".products-area-wrapper").classList.add("gridView");
-//   document
-//     .querySelector(".products-area-wrapper")
-//     .classList.remove("tableView");
-// });
-
-// document.querySelector(".list").addEventListener("click", function () {
-//   document.querySelector(".list").classList.add("active");
-//   document.querySelector(".grid").classList.remove("active");
-//   document.querySelector(".products-area-wrapper").classList.remove("gridView");
-//   document.querySelector(".products-area-wrapper").classList.add("tableView");
-// });
-
-function toggleMode() {
-  var element = document.body;
-  document.documentElement.classList.toggle("light");
-  element.classList.toggle("active");
-
+    title = title.slice(-1) == "," ? title.slice(0, -1) : title;
+    classname[i].setAttribute("title", title);
+  }
 }
+window.onload = strip_title;
