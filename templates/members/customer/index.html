@@ -159,17 +159,17 @@
     >
       {% if ticket.department.all.count > 1 and ticket.department.all.count < 3 %}
 
-      <span>
+      <span class="department active">
         {{ ticket.department.first }} + {{ ticket.department.count|sub:1 }}
       </span>
 
       {% elif ticket.department.all.count > 2 %}
-      <span>
+      <span class="department active">
         {{ ticket.department.first }} + {{ ticket.department.count|sub:1 }}
       </span>
 
       {% else %} {% for department in ticket.department.all %}
-      <span> {{ department }} </span>
+      <span class="department active"> {{ department }} </span>
       {% endfor %} {% endif %}
     </div>
       <div class="product-cell status-cell">
