@@ -14,6 +14,8 @@
 <!-- Latest compiled JavaScript -->
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script> -->
+<!--- Javascript library for excel file genration-->>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.5/xlsx.full.min.js"></script>
 
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
 	integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
@@ -152,6 +154,7 @@
 				<div style="align-self: center;">
 					<input type="date" id="meeting-time" name="meeting-time" value="2022-06-12">
 					<button class="button-17" onclick="buttonClick()">Submit</button>
+					<button class="button-17" onclick="Download()">Download</button>
 				</div>
 			</div>
 		</div>
@@ -204,13 +207,43 @@
 
 	}
 	const dateControl = document.querySelector('input[type="date"]');
+	function Download() {
+		var endpoint_table = "/buildingWise_api";
+		$.ajax({
+			method: "GET",
+			url: endpoint_table,
+			success: function (data) {
+				// This function takes in a JSON data object and a file name, and downloads the data as an Excel file
+				function downloadAsExcel(jsonData, fileName) {
+					var ws = XLSX.utils.json_to_sheet(jsonData);
+					var wb = XLSX.utils.book_new();
+					XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+					var data = XLSX.write(wb, { type: "array", bookType: "xlsx" });
+					
+					var blob = new Blob([data], { type: "application/vnd.ms-excel" });
+					
+					var link = document.createElement("a");
+					link.href = URL.createObjectURL(blob);
+					link.style = "visibility:hidden";
+					link.download = fileName + ".xlsx";
+					
+					document.body.appendChild(link);
+					link.click();
+					document.body.removeChild(link);
+				}
+				downloadAsExcel(data[dateformat(dateControl.value)], dateformat(dateControl.value));
+			},
+		});
+	}
+
+
 	function buttonDepartment() {
 		var endpoint_table = "/table_api";
 		$.ajax({
 			method: "GET",
 			url: endpoint_table,
 			success: function (data) {
-				// console.log(data[dateformat(dateControl.value)][0].department);
+				console.log(data[dateformat(dateControl.value)][0].opened);
 				buildTable(data)
 
 
@@ -271,13 +304,13 @@
 												<th style="background-color: #2f3c46; color: #fff;">Closed</th>
 												<th style="background-color: rgb(111, 144, 170); color: #fff;">Service Time</th>
 												<th style="background-color: #2f3c46; color: #fff;">Response Time</th>`;
-					if (data?.[dateformat(dateControl.value)] == undefined){
+					if (data?.[dateformat(dateControl.value)] == undefined) {
 						table.innerHTML = ``;
 					}
-					else{
-					table.innerHTML = ``;
-					for (var i = 0; i < data[dateformat(dateControl.value)].length; i++) {
-						var row = `<tr>
+					else {
+						table.innerHTML = ``;
+						for (var i = 0; i < data[dateformat(dateControl.value)].length; i++) {
+							var row = `<tr>
 								<td style="color:white;">${data[dateformat(dateControl.value)][i].building}</td>
 								<td style="color:white;">${data[dateformat(dateControl.value)][i].department}</td>
 								<td style="color:white;">${data[dateformat(dateControl.value)][i].opened}</td>
@@ -286,11 +319,11 @@
 								<td style="color:white;">0</td>
 								
 						  </tr>`
-						table.innerHTML += row
+							table.innerHTML += row
 
 
+						}
 					}
-				}
 				}
 
 			}
