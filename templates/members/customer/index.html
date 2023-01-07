@@ -1,4 +1,4 @@
-{% extends 'base.html' %} {% block content%}
+{% extends 'base.html' %} {% block content%} {% load mathfilters %}
 <div class="app-content">
   <div class="app-content-header">
     <h1 class="app-content-headerText">Tickets</h1>
@@ -152,17 +152,31 @@
         {{ticket.id}}
       </div>
 
-      <div class="product-cell category">
-        <span class="cell-label">Department</span>
-        {% for dep in ticket.department.all %}
-        <span class="department active">{{ dep }}</span>
-        {% endfor %}
-      </div>
+      <div
+      class="product-cell category"
+      id="dept_names"
+      title="{% for department in ticket.department.all %}{{ department }},{% endfor %}"
+    >
+      {% if ticket.department.all.count > 1 and ticket.department.all.count < 3 %}
+
+      <span class="department active">
+        {{ ticket.department.first }} + {{ ticket.department.count|sub:1 }}
+      </span>
+
+      {% elif ticket.department.all.count > 2 %}
+      <span class="department active">
+        {{ ticket.department.first }} + {{ ticket.department.count|sub:1 }}
+      </span>
+
+      {% else %} {% for department in ticket.department.all %}
+      <span class="department active"> {{ department }} </span>
+      {% endfor %} {% endif %}
+    </div>
       <div class="product-cell status-cell">
         <span class="cell-label">Published</span>
         <span class="status active">{{ ticket.created_at}}</span>
       </div>
-      <div class="product-cell category">
+      <div class="product-cell room">
         <span class="cell-label">Room Type:</span>
         <span class="category active" style="padding-right: 70px"
           >{{ ticket.room.room_type }}</span

@@ -35,6 +35,7 @@ AUTH_USER_MODEL = "members.Members"
 
 INSTALLED_APPS = [
     "rest_framework",
+    "mathfilters",
     "buildings",
     "admin_interface",
     "members",
