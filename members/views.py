@@ -264,9 +264,12 @@ def agent(request):
     Returns:
         render: The agent dashboard page
     """
-    dept=request.user.department.all()
+    dept = request.user.department.all()
     tickets = (
-        Ticket.objects.all().filter(status="Pending",department__in=dept).order_by("created_at").reverse()
+        Ticket.objects.all()
+        .filter(status="Pending", department__in=dept)
+        .order_by("created_at")
+        .reverse()
     )
     ticketFilter = TicketFilter(request.GET, queryset=tickets)
     tickets = ticketFilter.qs
