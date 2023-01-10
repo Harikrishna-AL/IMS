@@ -151,12 +151,14 @@ def detail_ticket(request, ticket_id):
             if ticket.agents_assigned.filter(agent__department=department).exists():
                 assigned_agent = ticket.agents_assigned.filter(
                     agent__department=department
-                ).values("agent__email", "is_assigned")
+                ).values("agent__email", "is_assigned","status")
                 assigned_agent_data.append(
                     {
                         "agent_email": assigned_agent[0]["agent__email"],
                         "is_assigned": assigned_agent[0]["is_assigned"],
                         "department": department.name,
+                        "status": assigned_agent[0]["status"]
+                        
                     }
                 )
             ## If the ticket does not have an agent assigned to the department, get the department and set is_assigned to False
@@ -166,6 +168,7 @@ def detail_ticket(request, ticket_id):
                         "agent_email": None,
                         "is_assigned": False,
                         "department": department.name,
+                        "status": "Pending"
                     }
                 )
     else:
@@ -176,6 +179,7 @@ def detail_ticket(request, ticket_id):
                     "agent_email": None,
                     "is_assigned": False,
                     "department": department.name,
+                    "status": "Pending"
                 }
             )
 
@@ -416,6 +420,7 @@ def activityCreation(request):
         Activity, ItemSwap, fields="__all__", extra=0, can_delete=False
     )
     agent = Members.objects.get(email=request.user.email)
+    
     if request.method == "POST":
         form = ActivityForm(request.POST or None, agent=agent)
         formset = ActivityFormSet(request.POST or None)
@@ -424,8 +429,14 @@ def activityCreation(request):
             ## Check if all the departments have completed the activity
             ## If yes, change the status of the ticket to completed
             ticket = Ticket.objects.get(activity=activity)
+            assigned_agent=Assignee.objects.get(
+            agent=agent, is_assigned=True, agents_assigned=ticket.id
+            )
+            assigned_agent.status="Completed"
+            assigned_agent.save()
             if ticket.activity_set.all().count() == ticket.department.all().count():
                 ticket.status = "Completed"
+          
                 ticket.save()
             for form in formset.forms:
                 item = form.save(commit=False)
