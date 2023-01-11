@@ -148,9 +148,9 @@ def detail_ticket(request, ticket_id):
         ## Loop through the ticket's departments
         for department in ticket.department.all():
             ## If the ticket has an agent assigned to the department, get the agent's email and department
-            if ticket.agents_assigned.filter(agent__department=department).exists():
+            if ticket.agents_assigned.filter(department=department).exists():
                 assigned_agent = ticket.agents_assigned.filter(
-                    agent__department=department
+                    department=department
                 ).values("agent__email", "is_assigned", "status")
                 assigned_agent_data.append(
                     {
@@ -208,7 +208,10 @@ def assign_agent(request, ticket_id, department: str):
     ## If no agents are assigned to the ticket, assign the agent to the ticket
     if ticket.agents_assigned.all().exists() is False:
         if department in agent.department.all().values_list("name", flat=True):
-            assigned_agent = Assignee.objects.create(agent=agent, is_assigned=True)
+            department = agent.department.get(name=department)
+            assigned_agent = Assignee.objects.create(
+                agent=agent, is_assigned=True, department=department
+            )
             ticket.agents_assigned.add(assigned_agent)
             ticket.save()
             messages.success(request, "Agent assigned to ticket")
@@ -222,13 +225,17 @@ def assign_agent(request, ticket_id, department: str):
     elif (
         department in agent.department.all().values_list("name", flat=True)
         and ticket.agents_assigned.filter(
-            agent=agent, agent__department__name=department
+            agent=agent, department__name=department
         ).exists()
     ):
         assigned_agent = Assignee.objects.get(
-            agent=agent, is_assigned=True, agents_assigned=ticket.id
+            agent=agent,
+            is_assigned=True,
+            agents_assigned=ticket.id,
+            department__name=department,
         )
         ticket.agents_assigned.remove(assigned_agent.id)
+        Assignee.objects.filter(id=assigned_agent.id).delete()
         ticket.save()
         messages.success(request, "Agent removed from ticket")
         return redirect("detail_ticket", ticket_id=ticket_id)
@@ -240,11 +247,14 @@ def assign_agent(request, ticket_id, department: str):
     elif (
         department in agent.department.all().values_list("name", flat=True)
         and not ticket.agents_assigned.filter(
-            agent=agent, agent__department__name=department
+            agent=agent, department__name=department
         ).exists()
         and ticket.agents_assigned.all().count() < ticket.department.all().count()
     ):
-        assigned_agent = Assignee.objects.create(agent=agent, is_assigned=True)
+        department = agent.department.get(name=department)
+        assigned_agent = Assignee.objects.create(
+            agent=agent, is_assigned=True, department=department
+        )
         ticket.agents_assigned.add(assigned_agent)
         ticket.save()
         messages.success(request, "Agent assigned to ticket")
@@ -267,10 +277,11 @@ def agent(request):
     Returns:
         render: The agent dashboard page
     """
-    dept = request.user.department.all()
+    dept = request.user.department.all().values_list("name", flat=True)
     tickets = (
         Ticket.objects.all()
-        .filter(status="Pending", department__in=dept)
+        .filter(status="Pending", department__name__in=dept)
+        .distinct()
         .order_by("created_at")
         .reverse()
     )

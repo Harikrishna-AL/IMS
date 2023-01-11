@@ -162,6 +162,7 @@ class Assignee(models.Model):
     agent = models.ForeignKey(
         "members.Members", on_delete=models.CASCADE, null=True, blank=True
     )
+    department = models.ForeignKey(Department, on_delete=models.CASCADE, null=True)
     is_assigned = models.BooleanField(default=False)
     assigned_at = models.DateTimeField(auto_now_add=True)
     STATUS_CHOICES = (
@@ -197,7 +198,6 @@ class Ticket(models.Model):
         related_name="ticket_created_by",
     )
 
-    ##TODO: add assigned_to field to assign ticket to a particular user
     agents_assigned = models.ManyToManyField(
         Assignee, related_name="agents_assigned", blank=True, null=True
     )
