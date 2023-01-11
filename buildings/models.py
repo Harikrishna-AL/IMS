@@ -165,8 +165,8 @@ class Assignee(models.Model):
     is_assigned = models.BooleanField(default=False)
     assigned_at = models.DateTimeField(auto_now_add=True)
     STATUS_CHOICES = (
-    ("Pending", "Pending"),
-    ("Completed", "Completed"),
+        ("Pending", "Pending"),
+        ("Completed", "Completed"),
     )
     status = models.CharField(max_length=200, choices=STATUS_CHOICES, default="Pending")
 
