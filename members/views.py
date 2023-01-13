@@ -416,7 +416,7 @@ def create_ticket(request):
 
 
 @login_required(login_url="login")
-def activityCreation(request):
+def activityCreation(request,ticket_no):
     """Activity Creation Form
 
     Args:
@@ -430,9 +430,9 @@ def activityCreation(request):
         Activity, ItemSwap, fields="__all__", extra=0, can_delete=False
     )
     agent = Members.objects.get(email=request.user.email)
-
+    ticket= Ticket.objects.get(ticket_no=ticket_no)
     if request.method == "POST":
-        form = ActivityForm(request.POST or None, agent=agent)
+        form = ActivityForm(request.POST or None, agent=agent, initial={'ticket':ticket})
         formset = ActivityFormSet(request.POST or None)
         if form.is_valid() and formset.is_valid():
             activity = form.save()
