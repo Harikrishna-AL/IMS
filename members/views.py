@@ -17,7 +17,7 @@ from .forms import (
     ActivityFilter,
     EditProfile,
 )
-from .utils import get_ip_address, ticketData, tableData, buildingWiseData
+from .utils import get_ip_address, ticketData, tableData, buildingWiseData, departmentPrice, itemWisedata
 from userlog.models import UserLog
 from buildings.models import Assignee
 
@@ -497,7 +497,39 @@ class buildingAPI(APIView):
 
         return Response(data)
 
+class departmentPriceAPI(APIView):
+    authentication_classes = []
+    permission_classes = []
 
+    def get(self, request, format=None):
+        data = departmentPrice()
+
+        return Response(data)
+class itemPriceAPI(APIView):
+    authentication_classes = []
+    permission_classes = []
+
+    def get(self, request, format=None):
+        data = itemWisedata()
+
+        return Response(data)
+
+class departmentPriceAPI(APIView):
+    authentication_classes = []
+    permission_classes = []
+
+    def get(self, request, format=None):
+        data = departmentPrice()
+
+        return Response(data)
+class itemPriceAPI(APIView):
+    authentication_classes = []
+    permission_classes = []
+
+    def get(self, request, format=None):
+        data = itemWisedata()
+
+        return Response(data)
 def report(request):
     """report page
 
