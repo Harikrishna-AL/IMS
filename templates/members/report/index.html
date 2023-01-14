@@ -141,12 +141,13 @@
 	<div class="vertical-container">
 		<div class="flex-container" style="justify-content: flex-start;">
 			<div class="container" style="height:35%; width:100%">
-				<h>Inventory management system</h>
+				<h>IMS</h>
 
 			</div>
 			<div class="container" style="height:35%; width:100%">
-				<button class="button-17" onclick="buttonBuilding()">Building</button>
+				<button class="button-17" onclick="buildingWiseData()">Building</button>
 				<button class="button-17" onclick="buttonDepartment()">Department</button>
+				<button class="button-17" onclick="departmentPriceButton()">Items</button>
 
 			</div>
 			<div class="container" style="height:35%; width:100%">
@@ -176,8 +177,24 @@
 
 			</div>
 		</div>
-		<div class="flex-container">
-			<table class="table table-striped">
+		<div class="flex-container" id="table-container">
+
+			<!-- <div class="container" style="height:50vh; width:100%">
+				<div style="height:100%; width:100%; position: relative;">
+
+					<table class="table table-striped">
+						<tr class="bg-info" id="bg-info">
+		
+						</tr>
+		
+						<tbody id="myTable">
+		
+						</tbody>
+					</table>
+				</div>
+
+			</div> -->
+			<table class="table table-striped" id="table">
 				<tr class="bg-info" id="bg-info">
 
 				</tr>
@@ -186,6 +203,20 @@
 
 				</tbody>
 			</table>
+			<!-- <div class="container" style="height:50vh; width:100%">
+				<div style="height:100%; width:100%">
+
+					<table class="table table-striped">
+						<tr class="bg-info" id="bg-info2">
+		
+						</tr>
+		
+						<tbody id="myTable2">
+		
+						</tbody>
+				</div>
+
+			</div> -->
 		</div>
 	</div>
 
@@ -219,14 +250,14 @@
 					var wb = XLSX.utils.book_new();
 					XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
 					var data = XLSX.write(wb, { type: "array", bookType: "xlsx" });
-					
+
 					var blob = new Blob([data], { type: "application/vnd.ms-excel" });
-					
+
 					var link = document.createElement("a");
 					link.href = URL.createObjectURL(blob);
 					link.style = "visibility:hidden";
 					link.download = fileName + ".xlsx";
-					
+
 					document.body.appendChild(link);
 					link.click();
 					document.body.removeChild(link);
@@ -251,11 +282,14 @@
 				function buildTable(data) {
 					var table = document.getElementById('myTable');
 					var table_header = document.getElementById('bg-info');
+					var entire_table = document.getElementById('table')
+					entire_table.style.width = "100%";
 					table_header.innerHTML = `<th style="background-color: #2f3c46; color: #fff;">Department</th>
 											<th style="background-color: rgb(111, 144, 170); color: #fff;">Opened</th>
 											<th style="background-color: #2f3c46; color: #fff;">Closed</th>
 											<th style="background-color: rgb(111, 144, 170); color: #fff;">Service Time</th>
-											<th style="background-color: #2f3c46; color: #fff;">Response Time</th>`;
+											<th style="background-color: #2f3c46; color: #fff;">Response Time</th>
+											<th style="background-color: #2f3c46; color: #fff;">Price</th>`;
 
 					if (data?.[dateformat(dateControl.value)] == undefined) {
 						table.innerHTML = ``;
@@ -271,6 +305,7 @@
 							<td style="color:white;">${data[dateformat(dateControl.value)][i].closed}</td>
 							<td style="color:white;">${data[dateformat(dateControl.value)][i].ServiceTime}</td>
 							<td style="color:white;">0</td>
+							<td style="color:white;">${data[dateformat(dateControl.value)][i].price}</td>
 							
 					  </tr>`
 							table.innerHTML += row
@@ -298,6 +333,8 @@
 				function buildTable(data) {
 					var table = document.getElementById('myTable')
 					var table_header = document.getElementById('bg-info')
+					var entire_table = document.getElementById('table')
+					entire_table.style.width = "100%";
 					table_header.innerHTML = `<th style="background-color: #2f3c46; color: #fff;">Building</th>
 												<th style="background-color: #2f3c46; color: #fff;">Department</th>
 												<th style="background-color: rgb(111, 144, 170); color: #fff;">Opened</th>
@@ -329,6 +366,65 @@
 			}
 		})
 	}
+	function buildingWiseData() {
+		var endpoint = '/buildingWise_api';
+		$.ajax({
+			method: "GET",
+			url: endpoint,
+			success: function (data) {
+				console.log(data);
+				buildTable(data)
+				function buildTable(data) {
+					var table = document.getElementById('myTable')
+					var table_header = document.getElementById('bg-info')
+					var entire_table = document.getElementById('table')
+					entire_table.style.width = "100%";
+					table_header.innerHTML = `<th style="background-color: #2f3c46; color: #fff;">Building</th>
+												<th style="background-color: #2f3c46; color: #fff;">Department</th>
+												<th style="background-color: rgb(111, 144, 170); color: #fff;">Opened</th>
+												<th style="background-color: #2f3c46; color: #fff;">Closed</th>
+												<th style="background-color: rgb(111, 144, 170); color: #fff;">Service Time</th>
+												<th style="background-color: #2f3c46; color: #fff;">Response Time</th>
+												<th style="background-color: rgb(111, 144, 170); color: #fff;">Item</th>
+												<th style="background-color: #2f3c46; color: #fff;">Price</th>`;
+					if (data?.[dateformat(dateControl.value)] == undefined) {
+						table.innerHTML = ``;
+					}
+					else {
+						table.innerHTML = ``;
+						for (var i = 0; i < data[dateformat(dateControl.value)].length; i++) {
+							for (var j = 0; j < data[dateformat(dateControl.value)][i].items.length; j++) {
+								var row = `<tr>
+								<td style="color:white;">${data[dateformat(dateControl.value)][i].building}</td>
+								<td style="color:white;">${data[dateformat(dateControl.value)][i].department}</td>
+								<td style="color:white;">${data[dateformat(dateControl.value)][i].opened}</td>
+								<td style="color:white;">${data[dateformat(dateControl.value)][i].closed}</td>
+								<td style="color:white;">0</td>
+								<td style="color:white;">0</td>
+								<td style="color:white;">${data[dateformat(dateControl.value)][i].items[j]}</td>
+								<td style="color:white;">${data[dateformat(dateControl.value)][i].price[j]}</td>
+								
+								
+						  </tr>`
+								table.innerHTML += row
+							}
+						// 	var row = `<tr>
+						// 		<td style="color:white;">${data[dateformat(dateControl.value)][i].building}</td>
+						// 		<td style="color:white;">${data[dateformat(dateControl.value)][i].department}</td>
+						// 		<td style="color:white;">${data[dateformat(dateControl.value)][i].opened}</td>
+						// 		<td style="color:white;">${data[dateformat(dateControl.value)][i].closed}</td>
+						// 		<td style="color:white;">0</td>
+						// 		<td style="color:white;">0</td>
+								
+						//   </tr>`
+						// 	table.innerHTML += row
+
+						}
+					}
+				}
+			}
+		})
+	}
 	function buttonClick() {
 		var endpoint_graph = '/graph_api';
 		buttonDepartment();
@@ -356,6 +452,53 @@
 		})
 	}
 
+	function departmentPriceButton() {
+		var endpoint_graph = '/itemWise_api';
+		$.ajax({
+			method: "GET",
+			url: endpoint_graph,
+			success: function (data) {
+				var table = document.getElementById('myTable')
+				var table_header = document.getElementById('bg-info')
+				var entire_table = document.getElementById('table')
+				var container = document.getElementById('table-container')
+				entire_table.style.width = "50%";
+				table_header.innerHTML = `<th style="background-color: #2f3c46; color: #fff;">Department</th>
+												<th style="background-color: rgb(111, 144, 170); color: #fff;">Total Cost</th>`;
+				container.innerHTML += `<table class="table table-striped">
+											<tr class="bg-info" id="bg-info">
+
+											</tr>
+											<tbody id="itemTable">
+											<th style="background-color: #2f3c46; color: #fff;">Department</th>
+											<th style="background-color: rgb(111, 144, 170); color: #fff;">Total Cost</th>
+											</tbody>
+										</table>`;
+				var itemTable = document.getElementById('itemTable')
+				console.log(data[dateformat(dateControl.value)]);
+				if (data?.[dateformat(dateControl.value)] == undefined) {
+					table.innerHTML = ``;
+				}
+				else {
+					table.innerHTML = ``;
+					for (var i = 0; i < data[dateformat(dateControl.value)].length; i++) {
+						var row = `<tr>
+								<td style="color:white;">${data[dateformat(dateControl.value)][i].department}</td>
+								<td style="color:white;">${data[dateformat(dateControl.value)][i].price}</td>
+								
+						  </tr>`
+						table.innerHTML += row
+
+
+					}
+				}
+
+			},
+			error: function (error_data) {
+				console.log(error_data);
+			}
+		})
+	}
 
 	function drawLineGraph(data, id) {
 		var labels = data.labels;
