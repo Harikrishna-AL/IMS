@@ -514,9 +514,6 @@ class itemPriceAPI(APIView):
 
         return Response(data)
 
-<<<<<<< HEAD
-
-=======
 class departmentPriceAPI(APIView):
     authentication_classes = []
     permission_classes = []
@@ -533,7 +530,6 @@ class itemPriceAPI(APIView):
         data = itemWisedata()
 
         return Response(data)
->>>>>>> 76cd78e (fix: fixed department and building api)
 def report(request):
     """report page
 

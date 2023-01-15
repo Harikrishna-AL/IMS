@@ -20,12 +20,8 @@ def ticketData():
     data = {}
     chartdata = []
     for ticket in x:
-<<<<<<< HEAD
-        dates.append(ticket.created_at)
-=======
         dates.append(ticket.created_at.strftime("%d/%m/%Y"))
         print(ticket.room.floor.block.building.name)
->>>>>>> 76cd78e (fix: fixed department and building api)
     dates = set(dates)
     dates = list(dates)
     print(dates)
@@ -73,22 +69,12 @@ def tableData():
                     service_time += (closed_at - created_at).total_seconds() / 60
                 else:
                     service_time += 0
-<<<<<<< HEAD
-            row_data = {}
-            row_data["department"] = i
-            row_data["opened"] = len(tickets.filter(department__name=i).values())
-            row_data["closed"] = len(
-                tickets.filter(department__name=i, status="Completed").values()
-            )
-            row_data["ServiceTime"] = service_time
-=======
             row_data = {}   
             row_data['department'] = i
             row_data['opened']= len(filter_ticket_dep.filter(department__name=i).values())
             row_data['closed'] = len(filter_ticket_dep.filter(department__name=i, status="Completed").values())
             row_data['ServiceTime'] = service_time
             row_data['price'] = sum(item_data)
->>>>>>> 76cd78e (fix: fixed department and building api)
             table_data.append(row_data)
         table_date_data[date] = table_data
 
@@ -104,12 +90,6 @@ def buildingWiseData():
     print(tickets)
     dates = []
     data = {}
-<<<<<<< HEAD
-    for ticket in tickets:
-        dates.append(ticket.created_at)
-    dates = set(dates)
-
-=======
     items = Item.objects.all() # to be used afterwards
     item_count = {}
     
@@ -118,7 +98,6 @@ def buildingWiseData():
       
     dates = set(dates)
     print(dates)    
->>>>>>> 76cd78e (fix: fixed department and building api)
     for date in dates:
 
         # day, month, year = date.strftime("%d/%m/%Y").split("/")
@@ -129,33 +108,12 @@ def buildingWiseData():
             building_data = {}
 
             for department in departments:
-<<<<<<< HEAD
-                building_data[department] = len(
-                    tickets.filter(
-                        room__floor__block__building=building,
-                        department__name=department,
-                    ).values()
-                )
-                row_data = {}
-                row_data["department"] = department
-                row_data["opened"] = len(
-                    tickets.filter(room__floor__block__building=building)
-                    .filter(department__name=department)
-                    .values()
-                )
-                row_data["closed"] = len(
-                    tickets.filter(room__floor__block__building=building)
-                    .filter(department__name=department, status="Completed")
-                    .values()
-                )
-=======
                 item_data = activities.filter(itemswap__items__department__name=department).values_list("itemswap__items__price", flat=True)
                 building_data[department] = len(tickets_filtered.filter(room__floor__block__building=building, department__name=department).values())
                 row_data = {}   
                 row_data['department'] = department
                 row_data['opened']= len(tickets_filtered.filter(room__floor__block__building=building).filter(department__name=department).values())
                 row_data['closed'] = len(tickets_filtered.filter(room__floor__block__building=building).filter(department__name=department, status="Completed").values())
->>>>>>> 76cd78e (fix: fixed department and building api)
                 # row_data['ServiceTime'] = service_time
                 row_data["building"] = building.name
                 table_data.append(row_data)
