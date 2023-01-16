@@ -50,7 +50,7 @@
   <div class="products-area-wrapper tableView">
     <div class="products-header">
       <div class="container my-3">
-        <h4 class="text-white">Ticket-ID: {{ticket_data.ticket_no}}</h4>
+        <h4 class="text-white">Ticket-No: {{ticket_data.id}}</h4>
 
         {% for assign in assigned_agent_data%}
           {% if user.email in assign.agent_email and assign.is_assigned is True and assign.status == 'Pending' %}
