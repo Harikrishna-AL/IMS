@@ -13,6 +13,7 @@ class TicketSerializer(serializers.ModelSerializer):
             "maintenance",
             "created_at",
             "created_by",
+            "creator_name",
             "agents_assigned",
             "status",
         )
