@@ -177,23 +177,13 @@
 
 			</div>
 		</div>
+		<div class="flex-container" id="dropdown">
+			<select id="select" onchange="selectChange()">
+				
+			</select>
+		</div>
 		<div class="flex-container" id="table-container">
-
-			<!-- <div class="container" style="height:50vh; width:100%">
-				<div style="height:100%; width:100%; position: relative;">
-
-					<table class="table table-striped">
-						<tr class="bg-info" id="bg-info">
-		
-						</tr>
-		
-						<tbody id="myTable">
-		
-						</tbody>
-					</table>
-				</div>
-
-			</div> -->
+			
 			<table class="table table-striped" id="table">
 				<tr class="bg-info" id="bg-info">
 
@@ -203,20 +193,7 @@
 
 				</tbody>
 			</table>
-			<!-- <div class="container" style="height:50vh; width:100%">
-				<div style="height:100%; width:100%">
-
-					<table class="table table-striped">
-						<tr class="bg-info" id="bg-info2">
-		
-						</tr>
-		
-						<tbody id="myTable2">
-		
-						</tbody>
-				</div>
-
-			</div> -->
+			
 		</div>
 	</div>
 
@@ -238,6 +215,8 @@
 
 	}
 	const dateControl = document.querySelector('input[type="date"]');
+	
+	console.log(text_dropdown);
 	function Download() {
 		var endpoint_table = "/table_api";
 		$.ajax({
@@ -372,14 +351,15 @@
 			method: "GET",
 			url: endpoint,
 			success: function (data) {
-				console.log(data);
+				console.log(data.buildings[0]);
 				buildTable(data)
 				function buildTable(data) {
 					var table = document.getElementById('myTable')
 					var table_header = document.getElementById('bg-info')
 					var entire_table = document.getElementById('table')
+					var dropdown = document.getElementById('select')
 					entire_table.style.width = "100%";
-					table_header.innerHTML = `<th style="background-color: #2f3c46; color: #fff;">Building</th>
+					table_header.innerHTML = `
 												<th style="background-color: #2f3c46; color: #fff;">Department</th>
 												<th style="background-color: rgb(111, 144, 170); color: #fff;">Opened</th>
 												<th style="background-color: #2f3c46; color: #fff;">Closed</th>
@@ -391,23 +371,44 @@
 						table.innerHTML = ``;
 					}
 					else {
+						for (var k=0; k<data.buildings.length; k++){
+							dropdown.innerHTML += `<option value="${data.buildings[k]}">${data.buildings[k]}</option>`
+						}
+						// dropdown.innerHTML = `<option value="All">All</option>`
+						const dropdownValControl = document.getElementById('select');
+						var dropdownVal = dropdownValControl.options[dropdownValControl.selectedIndex].text;
 						table.innerHTML = ``;
-						for (var i = 0; i < data[dateformat(dateControl.value)].length; i++) {
-							for (var j = 0; j < data[dateformat(dateControl.value)][i].items.length; j++) {
+						for (var i = 0; i < data[dateformat(dateControl.value)][dropdownVal].length; i++) {
+							if (data[dateformat(dateControl.value)][dropdownVal][i].items.length == 0) {
 								var row = `<tr>
-								<td style="color:white;">${data[dateformat(dateControl.value)][i].building}</td>
-								<td style="color:white;">${data[dateformat(dateControl.value)][i].department}</td>
-								<td style="color:white;">${data[dateformat(dateControl.value)][i].opened}</td>
-								<td style="color:white;">${data[dateformat(dateControl.value)][i].closed}</td>
-								<td style="color:white;">0</td>
-								<td style="color:white;">0</td>
-								<td style="color:white;">${data[dateformat(dateControl.value)][i].items[j]}</td>
-								<td style="color:white;">${data[dateformat(dateControl.value)][i].price[j]}</td>
 								
+								<td style="color:white;">${data[dateformat(dateControl.value)][dropdownVal][i].department}</td>
+								<td style="color:white;">${data[dateformat(dateControl.value)][dropdownVal][i].opened}</td>
+								<td style="color:white;">${data[dateformat(dateControl.value)][dropdownVal][i].closed}</td>
+								<td style="color:white;">0</td>
+								<td style="color:white;">0</td>
+								<td style="color:white;">None</td>
+								<td style="color:white;">0</td>
 								
 						  </tr>`
 								table.innerHTML += row
 							}
+							else{
+							for (var j = 0; j < data[dateformat(dateControl.value)][dropdownVal][i].items.length; j++) {
+								var row = `<tr>
+								
+								<td style="color:white;">${data[dateformat(dateControl.value)][dropdownVal][i].department}</td>
+								<td style="color:white;">${data[dateformat(dateControl.value)][dropdownVal][i].opened}</td>
+								<td style="color:white;">${data[dateformat(dateControl.value)][dropdownVal][i].closed}</td>
+								<td style="color:white;">0</td>
+								<td style="color:white;">0</td>
+								<td style="color:white;">${data[dateformat(dateControl.value)][dropdownVal][i].items[j]}</td>
+								<td style="color:white;">${data[dateformat(dateControl.value)][dropdownVal][i].price[j]}</td>
+								
+								
+						  </tr>`
+								table.innerHTML += row
+							}}
 						// 	var row = `<tr>
 						// 		<td style="color:white;">${data[dateformat(dateControl.value)][i].building}</td>
 						// 		<td style="color:white;">${data[dateformat(dateControl.value)][i].department}</td>
