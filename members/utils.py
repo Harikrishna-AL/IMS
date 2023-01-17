@@ -104,27 +104,30 @@ def buildingWiseData():
         day, month, year = date.split("/")
         tickets_filtered = tickets.filter(created_at__day=day, created_at__month=month, created_at__year=year)
         activities_filtered = activities.filter(closed_at__day=day, closed_at__month=month, closed_at__year=year)
-        table_data = []
+        
         for building in buildings:
             building_data = {}
-
+            table_data = []
             for department in departments:
                 # item_data = activities_filtered.filter(itemswap__items__department__name=department).values_list("itemswap__items__price", flat=True)
                 item_names = activities_filtered.filter(itemswap__items__department__name=department).values_list("itemswap__items__item_name", flat=True)
                 item_price = activities_filtered.filter(itemswap__items__department__name=department).values_list("itemswap__items__price", flat=True)
                 item_count = activities_filtered.filter(itemswap__items__department__name=department).values_list("itemswap__count", flat=True)
-                building_data[department] = len(tickets_filtered.filter(room__floor__block__building=building, department__name=department).values())
+                # building_data[department] = len(tickets_filtered.filter(room__floor__block__building=building, department__name=department).values())
                 row_data = {}   
                 row_data['department'] = department
                 row_data['opened']= len(tickets_filtered.filter(room__floor__block__building=building).filter(department__name=department).values())
                 row_data['closed'] = len(tickets_filtered.filter(room__floor__block__building=building).filter(department__name=department, status="Completed").values())
                 # row_data['ServiceTime'] = service_time
-                row_data["building"] = building.name
+                # row_data["building"] = building.name
                 item_data = np.multiply(item_price, item_count)
                 row_data['price'] = item_data
                 row_data['items'] = item_names
                 table_data.append(row_data)
-        data[date] = table_data
+            # building_data['building'] = building.name
+            building_data[building.name] = table_data
+        data[date] = building_data
+        data['buildings'] = buildings.values_list("name",flat=True)
     # return activities.filter(itemswap__items__department__name="Electrical").values()
     return data
 
