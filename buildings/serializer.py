@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Ticket, Department, Room
+from .models import Ticket, Department, Room, Assignee
 
 
 class TicketSerializer(serializers.ModelSerializer):
@@ -29,3 +29,8 @@ class RoomSerializer(serializers.ModelSerializer):
     class Meta:
         model = Room
         fields = ("id", "room_no", "floor", "room_type", "items")
+
+class AssigneeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Assignee
+        fields = ("id", "agent","status" ,"is_assigned", "assigned_at")

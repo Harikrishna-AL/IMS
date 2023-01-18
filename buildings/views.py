@@ -26,13 +26,29 @@ def postTicket(request):
         serializer.save()
     return Response(serializer.data)
 
-@api_view(['GET'])
+@api_view(["GET"])
 def getTicket(request):
     ticket_no = request.query_params.get('ticket_no')
     ticket = Ticket.objects.all()
     if ticket_no is not None:
         ticket=ticket.filter(ticket_no=ticket_no)
         serializer = TicketSerializer(ticket, many=True)
+        total_department=len(serializer.data[0]["department"])
+        total_assign=len(serializer.data[0]["agents_assigned"])
+        for t in range(total_department):
+            department=Department.objects.all().filter(id=serializer.data[0]["department"][t])
+            serialiser=DepartmentSerializer(department,many=True)
+            serializer.data[0]["department"].append(serialiser.data[0]["name"])
+        for i in range(len(serializer.data[0]["agents_assigned"])): 
+            assignee=Assignee.objects.all().filter(id=serializer.data[0]["agents_assigned"][i])
+            serialiser=AssigneeSerializer(assignee,many=True)
+            member=Members.objects.values().filter(id=serialiser.data[0]["agent"])
+            serialiser.data[0]["agent"]=member[0]["first_name"]+" "+member[0]["last_name"]
+            serializer.data[0]["agents_assigned"].append(serialiser.data[0])
+        for j in range(total_assign):
+            serializer.data[0]["agents_assigned"].pop(0)
+        for k in range(total_department):
+            serializer.data[0]["department"].pop(0)
     return Response(serializer.data)
     
 @api_view(['GET'])
