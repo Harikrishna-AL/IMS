@@ -1,0 +1,50 @@
+{% extends 'admin/login.html' %}
+{% load static %}
+{% block branding %}
+<style>
+body.login {
+    background: #665591;
+    min-height: 100vh;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+ }
+.login #header {
+    height: auto;
+    padding: 1rem;
+    background: #222;
+}
+.login #branding { width: 100%; }
+.login .head { display: flex; align-items: center; justify-content: center; }
+.login #container {
+    background: #fff;
+    border: none;
+    border-radius: 4px;
+    box-shadow: 2px 3px 5px #333;
+    overflow: hidden;
+    width: 50vw;
+    margin: 0;
+    max-width: 400px;
+}
+.login .submit-row
+{
+    display: flex;
+    justify-content: center;
+    padding: 1.5rem 0;
+}
+
+.login .submit-row input
+{
+    background: #8D81C7;
+    color: black;
+    display: block;
+    width: 100%;
+}
+</style>
+    <div class="head">
+        <!-- add logo and constrainst its size-->
+        <!-- <img src="{% static 'admin/img/logo.png' %}" alt="IMS Logo" style="width: 100px; height: 100px;"> -->
+        <!-- <img src="{% static 'admin/img/logo.png' %}" alt="IMS Logo" > -->
+        <h1>IMS Administration</h1>
+    </div>
+{% endblock %}

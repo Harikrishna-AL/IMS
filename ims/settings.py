@@ -38,7 +38,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "mathfilters",
     "buildings",
-    "admin_interface",
+    # "admin_interface",
     "members",
     "colorfield",
     "admin_reorder",
@@ -110,7 +110,7 @@ DATABASES = {
 
 ADMIN_REORDER = (
     {"app": "admin_interface", "label": "Admin Interface"},
-    {"app": "auth", "models": ("auth.User", "auth.Group")},
+    # {"app": "auth", "models": ("auth.User", "auth.Group")},
     {"app": "members", "label": "Members", "models": ("members.Members",)},
     {"app": "userlog", "label": "User Log", "models": ("userlog.UserLog",)},
     {

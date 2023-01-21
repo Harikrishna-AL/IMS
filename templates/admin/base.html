@@ -1,0 +1,40 @@
+{% extends 'admin/base.html' %}
+{% load static %}
+{% load i18n %}
+ {% block usertools %}
+        {% if has_permission %}
+        <div id="user-tools">
+            <div>
+                {% block welcome-msg %}
+                    <div style="font-size: 150%; padding: 0.3rem; text-transform: none">
+                        {% trans 'Namah Shivaya ' %}
+                        <strong>@{% firstof user.get_short_name user.get_username %}</strong> !
+                    </div>
+                {% endblock %}
+                {% block userlinks %}
+                    
+                    {% if user.has_usable_password %}
+                    <a href="{% url 'admin:password_change' %}">{% trans 'Change password' %}</a> /
+                    {% endif %}
+                    <a href="{% url 'admin:logout' %}">{% trans 'Log out' %}</a>
+                {% endblock %}
+            </div>
+        </div>
+        {% endif %}
+        {% endblock %}
+
+{% block footer %}
+    <style>
+        #footer
+        {
+            text-align: center;
+            padding: 2rem;
+            background: #eee;
+        }
+    </style>
+    <div id="footer" style="font-size: medium;">
+        
+        <img src="{% static 'admin/img/logo.png' %}" alt="IMS Logo" style="width: 100px; height: 100px;"><br><br>
+        Inventory Management System 
+    </div>
+{% endblock %}
