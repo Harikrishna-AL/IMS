@@ -4,7 +4,7 @@ from django.views.generic.list import ListView
 from buildings.models import Building
 from django.contrib import admin
 from members.models import Members
-from .models import Ticket, Department,Room
+from .models import Ticket, Department,Room, Activity
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from .serializer import *
@@ -42,6 +42,10 @@ def getTicket(request):
         for i in range(len(serializer.data[0]["agents_assigned"])): 
             assignee=Assignee.objects.all().filter(id=serializer.data[0]["agents_assigned"][i])
             serialiser=AssigneeSerializer(assignee,many=True)
+            if(serialiser.data[0]["status"]=="Completed"):
+                activity=Activity.objects.values().filter(ticket_id=serializer.data[0]["id"])
+                serialiser.data[0]["remark"]=activity[0]["comments"]
+                serialiser.data[0]["completed_at"]=activity[0]["closed_at"]
             member=Members.objects.values().filter(id=serialiser.data[0]["agent"])
             serialiser.data[0]["agent"]=member[0]["first_name"]+" "+member[0]["last_name"]
             serializer.data[0]["agents_assigned"].append(serialiser.data[0])
