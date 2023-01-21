@@ -544,7 +544,26 @@ ul.timelist, .timelist li {
 .related-widget-wrapper {
     float: left;       /* display properly in form rows with multiple fields */
     overflow: hidden;  /* clear floated contents */
+    
 }
+
+td.field-item{    
+    background-color: #eee;
+    color: #fff;
+}
+td.field-count{    
+    background-color: #eee;
+    color: #fff;
+}
+td.delete{    
+    background-color: #eee;
+    color: #fff;
+}
+
+
+
+
+
 
 .related-widget-wrapper-link {
     opacity: 0.3;

@@ -39,6 +39,9 @@ if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL1, document_root=settings.MEDIA_ROOT1)
     urlpatterns += static(settings.MEDIA_URL2, document_root=settings.MEDIA_ROOT2)
 
+admin.autodiscover()
+admin.site.enable_nav_sidebar = False
+
 admin.site.index_title = 'IMS Dashboard'
 admin.site.site_title = 'Inventory Management System'
 admin.site.site_header = 'Inventory Management System'
