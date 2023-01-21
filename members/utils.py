@@ -57,24 +57,31 @@ def tableData():
         for i in departments:
             filter_ticket_dep = filter_ticket.filter(department__name=i)
             service_time = 0
+            response_time = 0
             item_data = activity_filtered.filter(itemswap__items__department__name=i).values_list("itemswap__items__price", flat=True)
             for j in filter_ticket:
                 created_at = j.created_at
                 ticket_id = j.id
+                assigned_at = j.agents_assigned.filter(department__name=i).values_list("assigned_at", flat=True)
                 closed_at = activities.filter(ticket_id=ticket_id).values_list(
                     "closed_at", flat=True
                 )
-                if closed_at:
+                if assigned_at:
+                    assigned_at_time = assigned_at[0]
+                    service_time += (assigned_at_time - created_at).total_seconds() / 60
+                if closed_at and assigned_at:
                     closed_at = closed_at[0]
-                    service_time += (closed_at - created_at).total_seconds() / 60
+                    assigned_at = assigned_at[0]
+                    response_time += (closed_at - assigned_at).total_seconds() / 60
                 else:
-                    service_time += 0
+                    response_time += 0
             row_data = {}   
             row_data['department'] = i
             row_data['opened']= len(filter_ticket_dep.filter(department__name=i).values())
             row_data['closed'] = len(filter_ticket_dep.filter(department__name=i, status="Completed").values())
             row_data['ServiceTime'] = service_time
             row_data['price'] = sum(item_data)
+            row_data['ResponseTime'] = response_time
             table_data.append(row_data)
         table_date_data[date] = table_data
 
@@ -104,27 +111,49 @@ def buildingWiseData():
         day, month, year = date.split("/")
         tickets_filtered = tickets.filter(created_at__day=day, created_at__month=month, created_at__year=year)
         activities_filtered = activities.filter(closed_at__day=day, closed_at__month=month, closed_at__year=year)
-        table_data = []
+        
         for building in buildings:
             building_data = {}
-
+            table_data = []
             for department in departments:
+                service_time = 0
+                response_time = 0
+                for j in tickets_filtered:
+                    created_at = j.created_at
+                    ticket_id = j.id
+                    assigned_at = j.agents_assigned.filter(department__name=department).values_list("assigned_at", flat=True)
+                    closed_at = activities.filter(ticket_id=ticket_id).values_list(
+                        "closed_at", flat=True
+                    )
+                    if assigned_at:
+                        assigned_at_time = assigned_at[0]
+                        service_time += (assigned_at_time - created_at).total_seconds() / 60
+                    if closed_at and assigned_at:
+                        closed_at = closed_at[0]
+                        assigned_at = assigned_at[0]
+                        response_time += (closed_at - assigned_at).total_seconds() / 60
+                    else:
+                        response_time += 0
                 # item_data = activities_filtered.filter(itemswap__items__department__name=department).values_list("itemswap__items__price", flat=True)
                 item_names = activities_filtered.filter(itemswap__items__department__name=department).values_list("itemswap__items__item_name", flat=True)
                 item_price = activities_filtered.filter(itemswap__items__department__name=department).values_list("itemswap__items__price", flat=True)
                 item_count = activities_filtered.filter(itemswap__items__department__name=department).values_list("itemswap__count", flat=True)
-                building_data[department] = len(tickets_filtered.filter(room__floor__block__building=building, department__name=department).values())
+                # building_data[department] = len(tickets_filtered.filter(room__floor__block__building=building, department__name=department).values())
                 row_data = {}   
                 row_data['department'] = department
                 row_data['opened']= len(tickets_filtered.filter(room__floor__block__building=building).filter(department__name=department).values())
                 row_data['closed'] = len(tickets_filtered.filter(room__floor__block__building=building).filter(department__name=department, status="Completed").values())
-                # row_data['ServiceTime'] = service_time
-                row_data["building"] = building.name
+                row_data['ServiceTime'] = service_time
+                row_data['ResponseTime'] = response_time
+                # row_data["building"] = building.name
                 item_data = np.multiply(item_price, item_count)
                 row_data['price'] = item_data
                 row_data['items'] = item_names
                 table_data.append(row_data)
-        data[date] = table_data
+            # building_data['building'] = building.name
+            building_data[building.name] = table_data
+        data[date] = building_data
+        data['buildings'] = buildings.values_list("name",flat=True)
     # return activities.filter(itemswap__items__department__name="Electrical").values()
     return data
 
@@ -166,30 +195,37 @@ def departmentPrice():
 
 def itemWisedata():
     activities = Activity.objects.all()
+    tickets = Ticket.objects.all()
     dates = []
-    data = {}
+    data = []
     for activity in activities:
         dates.append(activity.closed_at.strftime("%d/%m/%Y"))
     
 
     dates = set(dates)
-    for date in dates:
-        table_data = []
-        day, month, year = date.split("/")
-        activities_filtered = activities.filter(closed_at__day=day, closed_at__month=month, closed_at__year=year)
-        item_count = activities_filtered.values_list("itemswap__count", flat=True)
-        item_names = activities_filtered.values_list("itemswap__items__item_name", flat=True)
-        item_data = {}
-        for i in range(len(item_names)):
-            if item_names[i] in item_data:
-                item_data[item_names[i]] += item_count[i]
-            else:
-                item_data[item_names[i]] = item_count[i]
-            # item_data[item_names[i]] = item_count[i]
-        # row_data = {}
-        # row_data["item"] = "Electrical"
-        # row_data["price"] = sum(item_data)
-        # table_data.append(row_data)
-        data[date] = item_data
+    # for date in dates:
 
+    #     table_data = []
+    #     day, month, year = date.split("/")
+    #     activities_filtered = activities.filter(closed_at__day=day, closed_at__month=month, closed_at__year=year)
+    #     item_count = activities_filtered.values_list("itemswap__count", flat=True)
+    #     item_names = activities_filtered.values_list("itemswap__items__item_name", flat=True)
+    #     item_data = {}
+    #     for i in range(len(item_names)):
+    #         if item_names[i] in item_data:
+    #             item_data[item_names[i]] += item_count[i]
+    #         else:
+    #             item_data[item_names[i]] = item_count[i]
+    #         # item_data[item_names[i]] = item_count[i]
+    #     # row_data = {}
+    #     # row_data["item"] = "Electrical"
+    #     # row_data["price"] = sum(item_data)
+    #     # table_data.append(row_data)
+    #     data[date] = item_data
+
+    for ticket in tickets:
+        assigned_time = ticket.agents_assigned.filter(department__name="Electrical").values_list("assigned_at", flat=True)[0]
+        created_time = ticket.created_at
+        time = (assigned_time - created_time).total_seconds() / 60
+        data.append(time)
     return data
